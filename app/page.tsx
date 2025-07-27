@@ -28,6 +28,7 @@ import {
   Flame,
   ChevronRight,
   Sparkles,
+  ArrowUp,
 } from "lucide-react"
 import { MorseConverter } from "@/components/morse-converter"
 import { MorseLearning } from "@/components/morse-learning"
@@ -163,18 +164,39 @@ export default function HomePage() {
       // Remove localStorage usage as it's not supported in Claude artifacts
       // localStorage.setItem("userProgress", JSON.stringify(updated))
 
-      // Add to recent activity if XP was gained
-      if (progressUpdate.xp && progressUpdate.xp > prev.xp) {
-        const xpGained = progressUpdate.xp - prev.xp
+      const xpGained = (progressUpdate.xp || 0) - prev.xp;
+
+      // Add to recent activity if XP was gained or other significant progress
+      if (xpGained > 0 || Object.keys(progressUpdate).some(key => key !== 'xp' && progressUpdate[key as keyof UserProgress] !== prev[key as keyof UserProgress])) {
+        let activityType: string = "progress";
+        let activityDescription: string = "Progress updated";
+
+        if (progressUpdate.lessonsCompleted && progressUpdate.lessonsCompleted > prev.lessonsCompleted) {
+          activityType = "lesson";
+          activityDescription = `Completed ${progressUpdate.lessonsCompleted - prev.lessonsCompleted} lesson(s)`;
+        } else if (progressUpdate.wordsLearned && progressUpdate.wordsLearned > prev.wordsLearned) {
+          activityType = "words";
+          activityDescription = `Learned ${progressUpdate.wordsLearned - prev.wordsLearned} new word(s)`;
+        } else if (progressUpdate.level && progressUpdate.level > prev.level) {
+          activityType = "level";
+          activityDescription = `Leveled up to Level ${progressUpdate.level}!`;
+        } else if (progressUpdate.streak && progressUpdate.streak > prev.streak) {
+          activityType = "streak";
+          activityDescription = `Increased streak to ${progressUpdate.streak} days!`;
+        } else if (progressUpdate.timeSpent && progressUpdate.timeSpent > prev.timeSpent) {
+          activityType = "time";
+          activityDescription = `Spent ${Math.floor((progressUpdate.timeSpent - prev.timeSpent) / 60)}m learning`;
+        }
+
         updated.recentActivity = [
           {
-            type: "progress",
-            description: "Progress updated",
+            type: activityType,
+            description: activityDescription,
             timestamp: new Date(),
             xpGained,
           },
           ...prev.recentActivity.slice(0, 9),
-        ]
+        ];
 
         // Update real-time stats
         setRealTimeStats((prevStats) => ({
@@ -191,7 +213,7 @@ export default function HomePage() {
             ...prevStats.weekStats,
             xpGained: prevStats.weekStats.xpGained + xpGained,
           },
-        }))
+        }));
       }
 
       return updated
@@ -444,87 +466,75 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Real-time Progress Overview */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 mb-8">
-          <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-blue-100 text-sm">Total XP</p>
-                  <p className="text-3xl font-bold">{userProgress.xp.toLocaleString()}</p>
-                  <p className="text-blue-100 text-xs">+{realTimeStats.todayStats.xpGained} today</p>
-                </div>
-                <Zap className="w-8 h-8 text-blue-200" />
-              </div>
-            </CardContent>
-          </Card>
 
-          <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-orange-100 text-sm">Streak</p>
-                  <p className="text-3xl font-bold">{userProgress.streak}</p>
-                  <p className="text-orange-100 text-xs">Best: {userProgress.longestStreak} days</p>
+       {/* Enhanced Stats Grid with better visual hierarchy */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 mb-8">
+          {[
+            {
+              title: "Total XP",
+              value: userProgress.xp.toLocaleString(),
+              subtitle: `+${realTimeStats.todayStats.xpGained} today`,
+              icon: Zap,
+              gradient: "from-blue-500 to-cyan-500",
+              bgGradient: "from-blue-50 to-cyan-50",
+            },
+            {
+              title: "Streak",
+              value: userProgress.streak.toString(),
+              subtitle: `Best: ${userProgress.longestStreak} days`,
+              icon: Flame,
+              gradient: "from-orange-500 to-red-500",
+              bgGradient: "from-orange-50 to-red-50",
+            },
+            {
+              title: "Accuracy",
+              value: `${userProgress.accuracy}%`,
+              subtitle: `+${realTimeStats.todayStats.accuracy - userProgress.accuracy}% today`,
+              icon: Target,
+              gradient: "from-green-500 to-emerald-500",
+              bgGradient: "from-green-50 to-emerald-50",
+            },
+            {
+              title: "Words Learned",
+              value: userProgress.wordsLearned.toString(),
+              subtitle: `+${realTimeStats.todayStats.wordsLearned} today`,
+              icon: BookOpen,
+              gradient: "from-purple-500 to-violet-500",
+              bgGradient: "from-purple-50 to-violet-50",
+            },
+            {
+              title: "Speed (WPM)",
+              value: userProgress.averageSpeed.toString(),
+              subtitle: "Personal best",
+              icon: TrendingUp,
+              gradient: "from-pink-500 to-rose-500",
+              bgGradient: "from-pink-50 to-rose-50",
+            },
+            {
+              title: "Time Spent",
+              value: `${Math.floor(userProgress.timeSpent / 60)}h`,
+              subtitle: `${userProgress.timeSpent % 60}m total`,
+              icon: Clock,
+              gradient: "from-indigo-500 to-blue-500",
+              bgGradient: "from-indigo-50 to-blue-50",
+            },
+          ].map(({ title, value, subtitle, icon: Icon, gradient, bgGradient }) => (
+            <Card key={title} className={`bg-gradient-to-br ${bgGradient} border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-12 h-12 bg-gradient-to-r ${gradient} rounded-xl flex items-center justify-center shadow-md`}>
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <ArrowUp className="w-4 h-4 text-green-500" />
                 </div>
-                <Flame className="w-8 h-8 text-orange-200" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-100 text-sm">Accuracy</p>
-                  <p className="text-3xl font-bold">{userProgress.accuracy}%</p>
-                  <p className="text-green-100 text-xs">
-                    +{realTimeStats.todayStats.accuracy - userProgress.accuracy}% today
-                  </p>
+                  <p className="text-gray-600 text-sm font-medium mb-1">{title}</p>
+                  <p className="text-3xl font-bold text-gray-900 mb-1">{value}</p>
+                  <p className="text-xs text-gray-500">{subtitle}</p>
                 </div>
-                <Target className="w-8 h-8 text-green-200" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-purple-100 text-sm">Words Learned</p>
-                  <p className="text-3xl font-bold">{userProgress.wordsLearned}</p>
-                  <p className="text-purple-100 text-xs">+{realTimeStats.todayStats.wordsLearned} today</p>
-                </div>
-                <BookOpen className="w-8 h-8 text-purple-200" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-r from-pink-500 to-pink-600 text-white">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-pink-100 text-sm">Speed (WPM)</p>
-                  <p className="text-3xl font-bold">{userProgress.averageSpeed}</p>
-                  <p className="text-pink-100 text-xs">Personal best</p>
-                </div>
-                <TrendingUp className="w-8 h-8 text-pink-200" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-indigo-100 text-sm">Time Spent</p>
-                  <p className="text-3xl font-bold">{Math.floor(userProgress.timeSpent / 60)}h</p>
-                  <p className="text-indigo-100 text-xs">{userProgress.timeSpent % 60}m total</p>
-                </div>
-                <Clock className="w-8 h-8 text-indigo-200" />
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
       {/* Enhanced Progress Section */}
@@ -567,20 +577,30 @@ export default function HomePage() {
                   const isToday = index === (new Date().getDay() === 0 ? 6 : new Date().getDay() - 1)
                   const dayTarget = Math.floor(userProgress.weeklyGoal / 7)
                   const todayProgress = isToday ? realTimeStats.todayStats.xpGained : 0
-                  const dayComplete = index < 5 || (isToday && todayProgress >= dayTarget)
-                  
+                  const dayProgressPercentage = Math.min((todayProgress / dayTarget) * 100, 100)
+                  const dayComplete = todayProgress >= dayTarget
+
                   return (
-                    <div key={day} className="text-center">
+                    <div key={day} className="text-center relative">
                       <div
-                        className={`w-14 h-14 rounded-full flex items-center justify-center text-sm font-bold relative overflow-hidden transition-all duration-300 ${
+                        className={`w-14 h-14 rounded-full flex items-center justify-center text-sm font-bold relative overflow-hidden transition-all duration-300 border-2 ${
                           dayComplete
-                            ? "bg-gradient-to-r from-green-400 to-emerald-500 text-white shadow-lg"
+                            ? "border-green-500 bg-green-100 text-green-800"
                             : isToday
-                              ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white shadow-lg"
-                              : "bg-gray-200 text-gray-500 hover:bg-gray-300"
+                              ? "border-blue-500 bg-blue-100 text-blue-800"
+                              : "border-gray-300 bg-gray-100 text-gray-600"
                         }`}
                       >
-                        {dayComplete ? "✓" : isToday ? day.slice(0,2) : day.slice(0,2)}
+                        {/* Inner progress circle */}
+                        <div
+                          className={`absolute inset-0 rounded-full ${
+                            dayComplete ? "bg-green-500" : "bg-blue-500"
+                          } opacity-30`}
+                          style={{ transform: `scale(${dayProgressPercentage / 100})` }}
+                        ></div>
+                        <span className="relative z-10">
+                          {isToday ? `${todayProgress} XP` : dayComplete ? "✓" : day.slice(0, 2)}
+                        </span>
                       </div>
                       <div className="text-xs text-gray-600 mt-2 font-medium">{day}</div>
                     </div>
