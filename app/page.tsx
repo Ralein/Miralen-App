@@ -305,125 +305,10 @@ export default function HomePage() {
     }
   }
 
-  const renderModeSelection = () => (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="mb-6">
-            <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-              <MessageSquare className="w-10 h-10 text-white" />
-            </div>
-            <h1 className="text-5xl font-bold text-gray-900 mb-4">Welcome to MorseConnect</h1>
-            <p className="text-xl text-gray-600 mb-4">Your comprehensive accessibility-first communication platform</p>
-            <p className="text-lg text-gray-500">Choose your accessibility mode to unlock personalized learning</p>
-          </div>
-        </div>
+  
+        
 
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {[
-            {
-              mode: "blind" as AccessibilityMode,
-              title: "Blind Mode",
-              icon: Volume2,
-              description: "Audio guidance with advanced haptic feedback",
-              features: [
-                "3D spatial audio instructions",
-                "Advanced vibration patterns",
-                "Voice-guided navigation",
-                "Audio Morse code with rhythm",
-                "Screen reader optimization",
-                "Gesture-based controls",
-              ],
-              color: "from-blue-500 to-blue-600",
-            },
-            {
-              mode: "deaf" as AccessibilityMode,
-              title: "Deaf Mode",
-              icon: Eye,
-              description: "Rich visual feedback with sign language integration",
-              features: [
-                "High-contrast visual animations",
-                "3D sign language avatars",
-                "Visual Morse patterns",
-                "Text-based communication",
-                "Gesture recognition",
-                "Visual notification system",
-              ],
-              color: "from-green-500 to-green-600",
-            },
-            {
-              mode: "mute" as AccessibilityMode,
-              title: "Mute Mode",
-              icon: MessageSquare,
-              description: "Silent communication with visual tools",
-              features: [
-                "Morse code output systems",
-                "Visual feedback only",
-                "Text-based interaction",
-                "Silent practice modes",
-                "Visual progress indicators",
-                "Gesture-based input",
-              ],
-              color: "from-purple-500 to-purple-600",
-            },
-            {
-              mode: "hybrid" as AccessibilityMode,
-              title: "Hybrid Mode",
-              icon: Settings,
-              description: "Fully customizable multi-modal experience",
-              features: [
-                "Mix any combination of modes",
-                "Adaptive interface",
-                "Personalized settings",
-                "Context-aware adjustments",
-                "Advanced customization",
-                "AI-powered optimization",
-              ],
-              color: "from-orange-500 to-orange-600",
-            },
-          ].map(({ mode, title, icon: Icon, description, features, color }) => (
-            <Card
-              key={mode}
-              className="cursor-pointer hover:shadow-2xl transition-all duration-300 border-2 hover:border-blue-500 hover:scale-105 group"
-              onClick={() => handleModeSelect(mode)}
-            >
-              <CardHeader className="text-center pb-4">
-                <div
-                  className={`w-16 h-16 bg-gradient-to-r ${color} rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform`}
-                >
-                  <Icon className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle className="text-2xl mb-2">{title}</CardTitle>
-                <CardDescription className="text-lg">{description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  {features.map((feature, index) => (
-                    <li key={index} className="flex items-center text-gray-600">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-3 flex-shrink-0" />
-                      <span className="text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className="text-center">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => handleModeSelect("hybrid")}
-            className="text-lg px-12 py-4 hover:bg-blue-50"
-          >
-            Skip Setup - Use Smart Defaults
-          </Button>
-          <p className="text-sm text-gray-500 mt-2">You can always change this later in settings</p>
-        </div>
-      </div>
-    </div>
-  )
+      
 
   const renderDashboard = () => (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -683,16 +568,7 @@ export default function HomePage() {
               progress: userProgress.skillLevels.interactiveLearning,
               gradient: "from-blue-500 to-cyan-500",
             },
-            {
-              title: "Smart Converter",
-              description: "Advanced text-to-Morse with AI assistance and multi-modal output",
-              icon: MessageSquare,
-              view: "converter",
-              color: "green",
-              badge: "Multi-modal",
-              progress: 100,
-              gradient: "from-green-500 to-emerald-500",
-            },
+           
             {
               title: "Sign Language Hub",
               description: "3D avatars and comprehensive dictionary with gesture recognition",
@@ -730,7 +606,7 @@ export default function HomePage() {
               view: "dictionary",
               color: "cyan",
               badge: `${userProgress.wordsLearned}/1000 Words`,
-              progress: (userProgress.wordsLearned / 1000) * 100,
+              progress: 100,
               gradient: "from-cyan-500 to-blue-500",
             },
             {
@@ -742,6 +618,16 @@ export default function HomePage() {
               badge: "Smart Recommendations",
               progress: 100,
               gradient: "from-pink-500 to-rose-500",
+            },
+             {
+              title: "Smart Converter",
+              description: "Advanced text-to-Morse with AI assistance and multi-modal output",
+              icon: MessageSquare,
+              view: "converter",
+              color: "green",
+              badge: "Multi-modal",
+              progress: 100,
+              gradient: "from-green-500 to-emerald-500",
             },
             {
               title: "Settings & Preferences",
@@ -881,9 +767,7 @@ export default function HomePage() {
     }
   }
 
-  if (!accessibilityMode) {
-    return renderModeSelection()
-  }
+  
 
   return (
     <div className="relative">
