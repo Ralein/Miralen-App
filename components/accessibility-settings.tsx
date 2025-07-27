@@ -17,10 +17,10 @@ interface AccessibilitySettingsProps {
   onModeChange: (mode: string | null) => void
   onBack: () => void
   userProgress: UserProgress
-  updateProgress: (progressUpdate: Partial<UserProgress>) => void
+  onProgressReset: () => void
 }
 
-export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack, userProgress, updateProgress }: AccessibilitySettingsProps) {
+export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack, userProgress, onProgressReset }: AccessibilitySettingsProps) {
   const [settings, setSettings] = useState({
     // Audio Settings
     audioEnabled: true,
@@ -124,6 +124,7 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
         signLanguage: 0,
         voiceRecognition: 0,
         multiplayer: 0,
+        
       },
       skillLevels: {
         letters: 0,
@@ -484,7 +485,7 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
               
               <Button 
                 variant="destructive" 
-                onClick={() => setShowResetConfirm(true)}
+                onClick={() => onProgressReset()}
                 className="bg-red-600 hover:bg-red-700 text-white"
               >
                 <AlertTriangle className="w-4 h-4 mr-2" />
@@ -507,7 +508,7 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
                       <li>{userProgress.streak} day streak and {userProgress.lessonsCompleted} completed lessons</li>
                       <li>{userProgress.wordsLearned} learned words and {userProgress.achievements.length} achievements</li>
                       <li>All skill progress and statistics</li>
-                      <li>Multiplayer rankings and tournament progress</li>
+
                     </ul>
                     <p className="text-red-700 text-sm font-semibold mb-4">
                       This action cannot be undone!
@@ -537,4 +538,8 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
       </div>
     </div>
   )
+}
+
+function updateProgress(resetUserProgress: UserProgress) {
+  throw new Error("Function not implemented.")
 }

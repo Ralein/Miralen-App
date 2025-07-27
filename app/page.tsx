@@ -853,7 +853,7 @@ export default function HomePage() {
             onModeChange={(mode) => handleModeSelect(mode as AccessibilityMode)}
             onBack={() => setCurrentView("dashboard")}
             userProgress={userProgress}
-            updateProgress={updateProgress}
+            onProgressReset={handleProgressReset}
           />
         )
       default:
