@@ -191,8 +191,12 @@ export function MorseConverter({ accessibilityMode, onBack }: MorseConverterProp
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center mb-8">
-          <Button variant="ghost" onClick={onBack} className="mr-4">
-            <ArrowLeft className="w-4 h-4 mr-2" />
+          <Button 
+            variant="ghost" 
+            onClick={onBack} 
+            className="mr-6 hover:bg-white/80 backdrop-blur-sm shadow-md"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
             Back
           </Button>
           <div>

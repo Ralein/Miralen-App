@@ -197,64 +197,57 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="flex items-center mb-8">
-          <Button variant="ghost" onClick={onBack} className="mr-4">
-            <ArrowLeft className="w-4 h-4 mr-2" />
+        {/* Enhanced Header */}
+        <div className="flex items-center mb-10">
+           <Button variant="ghost" onClick={onBack} className="mr-6 hover:bg-white/80 backdrop-blur-sm shadow-md">
+            <ArrowLeft className="w-5 h-5 mr-2" />
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Accessibility Settings</h1>
-            <p className="text-gray-600 mt-2">Customize your learning experience</p>
+            <h1 className="text-4xl font-bold text-black bg-clip-text text-transparent mb-2">
+              Accessibility Settings
+            </h1>
+            <p className="text-gray-600 text-lg font-medium">Customize your learning experience with precision</p>
           </div>
         </div>
 
-        {/* Current Mode */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Current Accessibility Mode</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <Badge variant="outline" className="text-lg px-4 py-2">
-                  {accessibilityMode ? accessibilityMode.charAt(0).toUpperCase() + accessibilityMode.slice(1) : "None"}{" "}
-                  Mode
-                </Badge>
-                <p className="text-gray-600 mt-2">
-                  {accessibilityMode === "blind" && "Audio + Haptic feedback"}
-                  {accessibilityMode === "deaf" && "Visual + Text feedback"}
-                  {accessibilityMode === "mute" && "Visual + Morse feedback"}
-                  {accessibilityMode === "hybrid" && "Customizable multi-modal"}
-                  {!accessibilityMode && "No specific mode selected"}
-                </p>
-              </div>
-              <Button variant="outline" onClick={() => onModeChange(null)}>
-                Change Mode
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+
+
+
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Audio Settings */}
-          <Card>
+          <Card className="hover:border-blue-300/50">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Volume2 className="w-5 h-5 mr-2 text-blue-600" />
-                Audio Settings
-              </CardTitle>
+              <div className="flex items-center">
+                <div className="p-3 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl mr-4 group-hover:from-blue-200 group-hover:to-blue-300 transition-colors shadow-inner">
+                  <Volume2 className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Audio Settings</h3>
+                  <p className="text-sm text-gray-600 mt-1">Configure sound feedback and morse code</p>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Enable Audio</label>
+            <CardContent className="space-y-8">
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50/50 to-transparent rounded-xl">
+                <div>
+                  <label className="text-sm font-bold text-gray-900">Enable Audio</label>
+                  <p className="text-xs text-gray-500 mt-1">Turn on sound feedback and morse tones</p>
+                </div>
                 <Switch
                   checked={settings.audioEnabled}
                   onCheckedChange={(checked) => updateSetting("audioEnabled", checked)}
                 />
               </div>
 
-              <div>
-                <label className="text-sm font-medium mb-2 block">Volume: {settings.audioVolume}%</label>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-bold text-gray-900">Volume</label>
+                  <div className="px-3 py-1 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 text-xs font-bold rounded-full shadow-inner">
+                    {settings.audioVolume}%
+                  </div>
+                </div>
                 <Slider
                   value={[settings.audioVolume]}
                   onValueChange={(value) => updateSetting("audioVolume", value[0])}
@@ -264,8 +257,13 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
                 />
               </div>
 
-              <div>
-                <label className="text-sm font-medium mb-2 block">Morse Speed: {settings.morseSpeed} WPM</label>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-bold text-gray-900">Morse Speed</label>
+                  <div className="px-3 py-1 bg-gradient-to-r from-green-100 to-green-200 text-green-800 text-xs font-bold rounded-full shadow-inner">
+                    {settings.morseSpeed} WPM
+                  </div>
+                </div>
                 <Slider
                   value={[settings.morseSpeed]}
                   onValueChange={(value) => updateSetting("morseSpeed", value[0])}
@@ -276,8 +274,13 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
                 />
               </div>
 
-              <div>
-                <label className="text-sm font-medium mb-2 block">Tone Frequency: {settings.toneFrequency} Hz</label>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-bold text-gray-900">Tone Frequency</label>
+                  <div className="px-3 py-1 bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 text-xs font-bold rounded-full shadow-inner">
+                    {settings.toneFrequency} Hz
+                  </div>
+                </div>
                 <Slider
                   value={[settings.toneFrequency]}
                   onValueChange={(value) => updateSetting("toneFrequency", value[0])}
@@ -288,7 +291,7 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
                 />
               </div>
 
-              <Button
+  <Button
                 variant="outline"
                 onClick={testAudioSettings}
                 disabled={!settings.audioEnabled}
@@ -300,37 +303,43 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
           </Card>
 
           {/* Visual Settings */}
-          <Card>
+         <Card className="hover:border-green-300/50">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Eye className="w-5 h-5 mr-2 text-green-600" />
-                Visual Settings
-              </CardTitle>
+              <div className="flex items-center">
+                <div className="p-3 bg-gradient-to-br from-green-100 to-green-200 rounded-xl mr-4 group-hover:from-green-200 group-hover:to-green-300 transition-colors shadow-inner">
+                  <Eye className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Visual Settings</h3>
+                  <p className="text-sm text-gray-600 mt-1">Adjust display and visual accessibility</p>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">High Contrast</label>
-                <Switch
-                  checked={settings.highContrast}
-                  onCheckedChange={(checked) => updateSetting("highContrast", checked)}
-                />
-              </div>
+              {[
+                { key: 'highContrast', label: 'High Contrast', desc: 'Enhance visibility with better contrast' },
+                { key: 'darkMode', label: 'Dark Mode', desc: 'Switch to dark theme interface' },
+                { key: 'colorBlindFriendly', label: 'Color Blind Friendly', desc: 'Use accessible color patterns' }
+              ].map((item) => (
+                <div key={item.key} className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50/50 to-transparent rounded-xl">
+                  <div>
+                    <label className="text-sm font-bold text-gray-900">{item.label}</label>
+                    <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
+                  </div>
+                  <Switch
+                    checked={settings[item.key as keyof typeof settings] as boolean}
+                    onCheckedChange={(checked) => updateSetting(item.key, checked)}
+                  />
+                </div>
+              ))}
 
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Dark Mode</label>
-                <Switch checked={settings.darkMode} onCheckedChange={(checked) => updateSetting("darkMode", checked)} />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Color Blind Friendly</label>
-                <Switch
-                  checked={settings.colorBlindFriendly}
-                  onCheckedChange={(checked) => updateSetting("colorBlindFriendly", checked)}
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium mb-2 block">Font Size: {settings.fontSize}px</label>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-bold text-gray-900">Font Size</label>
+                  <div className="px-3 py-1 bg-gradient-to-r from-indigo-100 to-indigo-200 text-indigo-800 text-xs font-bold rounded-full shadow-inner">
+                    {settings.fontSize}px
+                  </div>
+                </div>
                 <Slider
                   value={[settings.fontSize]}
                   onValueChange={(value) => updateSetting("fontSize", value[0])}
@@ -340,8 +349,13 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
                 />
               </div>
 
-              <div>
-                <label className="text-sm font-medium mb-2 block">Animation Speed: {settings.animationSpeed}x</label>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-bold text-gray-900">Animation Speed</label>
+                  <div className="px-3 py-1 bg-gradient-to-r from-teal-100 to-teal-200 text-teal-800 text-xs font-bold rounded-full shadow-inner">
+                    {settings.animationSpeed}x
+                  </div>
+                </div>
                 <Slider
                   value={[settings.animationSpeed]}
                   onValueChange={(value) => updateSetting("animationSpeed", value[0])}
@@ -354,26 +368,37 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
           </Card>
 
           {/* Haptic Settings */}
-          <Card>
+           <Card className="hover:border-purple-300/50">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Vibrate className="w-5 h-5 mr-2 text-purple-600" />
-                Haptic Settings
-              </CardTitle>
+              <div className="flex items-center">
+                <div className="p-3 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl mr-4 group-hover:from-purple-200 group-hover:to-purple-300 transition-colors shadow-inner">
+                  <Vibrate className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Haptic Settings</h3>
+                  <p className="text-sm text-gray-600 mt-1">Configure vibration and tactile feedback</p>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Enable Vibration</label>
+            <CardContent className="space-y-8">
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50/50 to-transparent rounded-xl">
+                <div>
+                  <label className="text-sm font-bold text-gray-900">Enable Vibration</label>
+                  <p className="text-xs text-gray-500 mt-1">Turn on haptic feedback for interactions</p>
+                </div>
                 <Switch
                   checked={settings.vibrationEnabled}
                   onCheckedChange={(checked) => updateSetting("vibrationEnabled", checked)}
                 />
               </div>
 
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Vibration Intensity: {settings.vibrationIntensity}%
-                </label>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-bold text-gray-900">Vibration Intensity</label>
+                  <div className="px-3 py-1 bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 text-xs font-bold rounded-full shadow-inner">
+                    {settings.vibrationIntensity}%
+                  </div>
+                </div>
                 <Slider
                   value={[settings.vibrationIntensity]}
                   onValueChange={(value) => updateSetting("vibrationIntensity", value[0])}
@@ -387,92 +412,109 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
                 variant="outline"
                 onClick={testVibration}
                 disabled={!settings.vibrationEnabled}
-                className="w-full bg-transparent"
+                className="w-full"
               >
-                Test Vibration
+                {false ? (
+                  <>
+                    <div className="w-4 h-4 mr-2 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+                    Testing Vibration...
+                  </>
+                ) : (
+                  <>
+                    <Vibrate className="w-4 h-4 mr-2" />
+                    Test Vibration
+                  </>
+                )}
               </Button>
             </CardContent>
           </Card>
 
+
           {/* Interface Settings */}
-          <Card>
+          <Card className="hover:border-orange-300/50">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Settings className="w-5 h-5 mr-2 text-orange-600" />
-                Interface Settings
-              </CardTitle>
+              <div className="flex items-center">
+                <div className="p-3 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl mr-4 group-hover:from-orange-200 group-hover:to-orange-300 transition-colors shadow-inner">
+                  <Settings className="w-6 h-6 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Interface Settings</h3>
+                  <p className="text-sm text-gray-600 mt-1">Customize interface and controls</p>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Button Size</label>
-                <Select value={settings.buttonSize} onValueChange={(value) => updateSetting("buttonSize", value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="small">Small</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="large">Large</SelectItem>
-                    <SelectItem value="extra-large">Extra Large</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Gesture Controls</label>
-                <Switch
-                  checked={settings.gestureControls}
-                  onCheckedChange={(checked) => updateSetting("gestureControls", checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Voice Commands</label>
-                <Switch
-                  checked={settings.voiceCommands}
-                  onCheckedChange={(checked) => updateSetting("voiceCommands", checked)}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Learning Settings */}
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Zap className="w-5 h-5 mr-2 text-yellow-600" />
-                Learning Preferences
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium">Show Hints</label>
-                  <Switch
-                    checked={settings.showHints}
-                    onCheckedChange={(checked) => updateSetting("showHints", checked)}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium">Auto Advance</label>
-                  <Switch
-                    checked={settings.autoAdvance}
-                    onCheckedChange={(checked) => updateSetting("autoAdvance", checked)}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium">Practice Reminders</label>
-                  <Switch
-                    checked={settings.practiceReminders}
-                    onCheckedChange={(checked) => updateSetting("practiceReminders", checked)}
-                  />
+            <CardContent className="space-y-8">
+              <div className="space-y-4">
+                <label className="text-sm font-bold text-gray-900 block">Button Size</label>
+                <div className="grid grid-cols-2 gap-3">
+                  {['small', 'medium', 'large', 'extra-large'].map((size) => (
+                    <Button
+                      key={size}
+                      value={size}
+                      variant={settings.buttonSize === size ? "default" : "outline"}
+                      onClick={() => updateSetting("buttonSize", size)}
+                    >
+                      {size.charAt(0).toUpperCase() + size.slice(1).replace('-', ' ')}
+                    </Button>
+                  ))}
                 </div>
               </div>
+
+              {[
+                { key: 'gestureControls', label: 'Gesture Controls', desc: 'Enable swipe and touch gestures' },
+                { key: 'voiceCommands', label: 'Voice Commands', desc: 'Control app with voice input' }
+              ].map((item) => (
+                <div key={item.key} className="flex items-center justify-between p-4 bg-gradient-to-r from-orange-50/50 to-transparent rounded-xl">
+                  <div>
+                    <label className="text-sm font-bold text-gray-900">{item.label}</label>
+                    <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
+                  </div>
+                  <Switch
+                    checked={settings[item.key as keyof typeof settings] as boolean}
+                    onCheckedChange={(checked) => updateSetting(item.key, checked)}
+                  />
+                </div>
+              ))}
             </CardContent>
           </Card>
         </div>
+
+
+          {/* Learning Settings */}
+           <Card className="mt-8 hover:border-yellow-300/50">
+          <CardHeader>
+            <div className="flex items-center">
+              <div className="p-3 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl mr-4 group-hover:from-yellow-200 group-hover:to-yellow-300 transition-colors shadow-inner">
+                <Zap className="w-6 h-6 text-yellow-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Learning Preferences</h3>
+                <p className="text-sm text-gray-600 mt-1">Customize your learning experience and study habits</p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { key: 'showHints', label: 'Show Hints', desc: 'Display helpful tips during lessons' },
+                { key: 'autoAdvance', label: 'Auto Advance', desc: 'Automatically proceed to next lesson' },
+                { key: 'practiceReminders', label: 'Practice Reminders', desc: 'Get notifications to practice daily' }
+              ].map((item) => (
+                <div key={item.key} className="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-50/50 to-transparent rounded-xl">
+                  <div>
+                    <label className="text-sm font-bold text-gray-900">{item.label}</label>
+                    <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
+                  </div>
+                  <Switch
+                    checked={settings[item.key as keyof typeof settings] as boolean}
+                    onCheckedChange={(checked) => updateSetting(item.key, checked)}
+                  />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
         {/* Reset Buttons */}
         <Card className="mt-6">
@@ -536,9 +578,11 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
           </CardContent>
         </Card>
       </div>
-    </div>
+
   )
 }
+
+ 
 
 function updateProgress(resetUserProgress: UserProgress) {
   throw new Error("Function not implemented.")

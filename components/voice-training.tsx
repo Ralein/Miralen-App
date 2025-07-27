@@ -497,9 +497,9 @@ export function VoiceTraining({ accessibilityMode, onBack, userProgress, updateP
           <Button
             variant="ghost"
             onClick={selectedExercise ? () => setSelectedExercise(null) : onBack}
-            className="mr-4"
+            className="mr-6 hover:bg-white/80 backdrop-blur-sm shadow-md"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-5 h-5 mr-2" />
             {selectedExercise ? "Back to Exercises" : "Back"}
           </Button>
           <div>
