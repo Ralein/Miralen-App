@@ -257,7 +257,7 @@ const SIGN_CATEGORIES = [
       {
         letter: "HELLO",
         description: "Hand waves from forehead outward",
-        image: "/placeholder.svg?height=200&width=200&text=HELLO",
+        video: "https://youtu.be/yWBYXx6EsVk",
         difficulty: "Easy",
       },
       {
@@ -603,11 +603,27 @@ export function SignLanguageViewer({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedSign, setSelectedSign] = useState<any>(null)
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [practiceMode, setPracticeMode] = useState(false)
   const [currentPracticeIndex, setCurrentPracticeIndex] = useState(0)
   const [practiceScore, setPracticeScore] = useState(0)
   const [signsLearned, setSignsLearned] = useState<string[]>([])
+
+  const getYouTubeEmbedUrl = (url: string, autoplay = false) => {
+    if (!url) return null
+    let videoId = null
+    const regex =
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(?:embed\/)?([a-zA-Z0-9_-]{11})/
+    const match = url.match(regex)
+    if (match) {
+      videoId = match[1]
+    }
+    if (videoId) {
+      return `https://www.youtube.com/embed/${videoId}${autoplay ? "?autoplay=1" : ""}`
+    }
+    return null
+  }
 
   const filteredCategories = SIGN_CATEGORIES.filter(
     (category) =>
@@ -621,9 +637,25 @@ export function SignLanguageViewer({
       ) || []
     : []
 
-  const playSignAnimation = (sign: any) => {
+  const playSignAnimation = (sign: any, autoplay = false) => {
+    const isSameSign = selectedSign && selectedSign.letter === sign.letter
     setSelectedSign(sign)
     setIsPlaying(true)
+
+    if (sign.video) {
+      if (isSameSign && autoplay) {
+        setVideoUrl(null)
+        setTimeout(() => {
+          const embedUrl = getYouTubeEmbedUrl(sign.video, autoplay)
+          setVideoUrl(embedUrl)
+        }, 50)
+      } else {
+        const embedUrl = getYouTubeEmbedUrl(sign.video, autoplay)
+        setVideoUrl(embedUrl)
+      }
+    } else {
+      setVideoUrl(null)
+    }
 
     // Mark sign as learned and update progress
     if (!signsLearned.includes(sign.letter)) {
@@ -940,7 +972,7 @@ export function SignLanguageViewer({
             <Card
               key={sign.letter}
               className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
-              onClick={() => playSignAnimation(sign)}
+              onClick={() => playSignAnimation(sign, false)}
             >
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
@@ -973,7 +1005,7 @@ export function SignLanguageViewer({
                       className="opacity-80 hover:opacity-100"
                       onClick={(e) => {
                         e.stopPropagation()
-                        playSignAnimation(sign)
+                        playSignAnimation(sign, true)
                       }}
                     >
                       <Play className="w-4 h-4" />
@@ -1006,17 +1038,30 @@ export function SignLanguageViewer({
               <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="text-center">
-                    <img
-                      src={selectedSign.image || "/placeholder.svg"}
-                      alt={`Sign for ${selectedSign.letter}`}
-                      className="w-full max-w-sm mx-auto rounded-lg bg-gray-100 mb-4"
-                    />
-                    <div className="flex justify-center space-x-4">
-                      <Button onClick={() => playSignAnimation(selectedSign)} disabled={isPlaying}>
+                    {selectedSign.video && videoUrl ? (
+                      <iframe
+                        key={selectedSign.letter}
+                        width="100%"
+                        height="315"
+                        src={videoUrl}
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
+                    ) : (
+                      <img
+                        src={selectedSign.image || "/placeholder.svg"}
+                        alt={`Sign for ${selectedSign.letter}`}
+                        className="w-full max-w-sm mx-auto rounded-lg bg-gray-100 mb-4"
+                      />
+                    )}
+                    <div className="flex justify-center space-x-4 mt-4">
+                      <Button onClick={() => playSignAnimation(selectedSign, true)} disabled={isPlaying}>
                         {isPlaying ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
-                        {isPlaying ? "Playing..." : "Play Animation"}
+                        {isPlaying ? "Playing..." : selectedSign.video ? "Play Video" : "Play Animation"}
                       </Button>
-                      <Button variant="outline" onClick={() => playSignAnimation(selectedSign)}>
+                      <Button variant="outline" onClick={() => playSignAnimation(selectedSign, true)}>
                         <RotateCcw className="w-4 h-4 mr-2" />
                         Replay
                       </Button>

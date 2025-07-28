@@ -53,7 +53,7 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
   const [showResetConfirm, setShowResetConfirm] = useState(false)
 
   useEffect(() => {
-    // Remove localStorage usage as it's not supported in Claude artifacts
+
     // const savedSettings = localStorage.getItem("accessibilitySettings")
     // if (savedSettings) {
     //   setSettings(JSON.parse(savedSettings))
@@ -204,7 +204,7 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
             Back
           </Button>
           <div>
-            <h1 className="text-4xl font-bold text-black bg-clip-text text-transparent mb-2">
+            <h1 className="text-4xl font-bold text-black mb-2">
               Accessibility Settings
             </h1>
             <p className="text-gray-600 text-lg font-medium">Customize your learning experience with precision</p>
