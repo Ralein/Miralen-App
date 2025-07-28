@@ -536,19 +536,19 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-full mx-auto">
         {/* Header */}
         <div className="flex items-center mb-8">
-          <Button 
-            variant="ghost" 
-            onClick={selectedLesson ? () => setSelectedLesson(null) : onBack} 
+          <Button
+            variant="ghost"
+            onClick={selectedLesson ? () => setSelectedLesson(null) : onBack}
             className="mr-6 hover:bg-white/80 backdrop-blur-sm shadow-md"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back
           </Button>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-gray-900 truncate">
               {selectedLesson ? "Morse Code Practice" : "Learn Morse Code"}
             </h1>
             <p className="text-gray-600 mt-2">

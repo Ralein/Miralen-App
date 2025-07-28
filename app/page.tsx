@@ -161,8 +161,8 @@ export default function HomePage() {
     setUserProgress((prev) => {
       const updated = { ...prev, ...progressUpdate }
       
-      // Remove localStorage usage as it's not supported in Claude artifacts
-      // localStorage.setItem("userProgress", JSON.stringify(updated))
+
+
 
       const xpGained = (progressUpdate.xp || 0) - prev.xp;
 
@@ -292,16 +292,8 @@ export default function HomePage() {
 
   const getModeDescription = (mode: AccessibilityMode) => {
     switch (mode) {
-      case "blind":
-        return "Audio + Haptic feedback with voice guidance"
-      case "deaf":
-        return "Visual + Text feedback with sign language"
-      case "mute":
-        return "Visual + Morse feedback with gesture controls"
-      case "hybrid":
-        return "Customizable multi-modal experience"
       default:
-        return "Select your preferred accessibility mode"
+        return ""
     }
   }
 
@@ -311,40 +303,40 @@ export default function HomePage() {
       
 
   const renderDashboard = () => (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 p-2 sm:p-4">
       <div className="max-w-7xl mx-auto">
-        {/* Enhanced Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg mr-3 flex items-center justify-center">
-                <MessageSquare className="w-6 h-6 text-white" />
+        {/* Enhanced Header - Mobile Responsive */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
+          <div className="text-center sm:text-left">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 flex items-center justify-center sm:justify-start">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg mr-2 sm:mr-3 flex items-center justify-center">
+                <MessageSquare className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
               Viola Dashboard
             </h1>
-            <p className="text-gray-600 mt-2 text-lg">{getModeDescription(accessibilityMode)}</p>
-            <div className="flex items-center mt-2 space-x-4">
-              <Badge variant="secondary" className="text-sm">
+            <p className="text-gray-600 mt-2 text-sm sm:text-base lg:text-lg px-2 sm:px-0">{getModeDescription(accessibilityMode)}</p>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start mt-2 gap-2 sm:space-x-4 sm:gap-0">
+              <Badge variant="secondary" className="text-xs sm:text-sm">
                 <Clock className="w-3 h-3 mr-1" />
                 Session: {realTimeStats.currentSession.timeSpent}m
               </Badge>
-              <Badge variant="secondary" className="text-sm">
+              <Badge variant="secondary" className="text-xs sm:text-sm">
                 <Calendar className="w-3 h-3 mr-1" />
                 Today: {realTimeStats.todayStats.timeSpent}m
               </Badge>
             </div>
           </div>
-          <div className="flex items-center space-x-4">
-            <div className="text-right">
-              <Badge variant="secondary" className="text-lg px-4 py-2 mb-2">
-                <Star className="w-4 h-4 mr-2" />
+          <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+            <div className="text-center sm:text-right">
+              <Badge variant="secondary" className="text-base sm:text-lg px-3 sm:px-4 py-2 mb-2">
+                <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                 Level {userProgress.level}
               </Badge>
-              <div className="text-sm text-gray-600">
+              <div className="text-xs sm:text-sm text-gray-600">
                 Next: {userProgress.nextMilestone.progress}/{userProgress.nextMilestone.target} XP
               </div>
             </div>
-            <Button variant="outline" size="sm" onClick={() => setCurrentView("settings")}>
+            <Button variant="outline" size="sm" onClick={() => setCurrentView("settings")} className="w-full sm:w-auto">
               <Settings className="w-4 h-4 mr-2" />
               Settings
             </Button>
@@ -352,13 +344,13 @@ export default function HomePage() {
         </div>
 
 
-       {/* Enhanced Stats Grid with better visual hierarchy */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 mb-8">
+       {/* Enhanced Stats Grid - Mobile Responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 mb-6 sm:mb-8">
           {[
             {
               title: "Total XP",
               value: userProgress.xp.toLocaleString(),
-              subtitle: `+${realTimeStats.todayStats.xpGained} today`,
+              subtitle: `+${Math.round(realTimeStats.todayStats.xpGained/2)} today`,
               icon: Zap,
               gradient: "from-blue-500 to-cyan-500",
               bgGradient: "from-blue-50 to-cyan-50",
@@ -405,16 +397,16 @@ export default function HomePage() {
             },
           ].map(({ title, value, subtitle, icon: Icon, gradient, bgGradient }) => (
             <Card key={title} className={`bg-gradient-to-br ${bgGradient} border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className={`w-12 h-12 bg-gradient-to-r ${gradient} rounded-xl flex items-center justify-center shadow-md`}>
-                    <Icon className="w-6 h-6 text-white" />
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r ${gradient} rounded-xl flex items-center justify-center shadow-md`}>
+                    <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   <ArrowUp className="w-4 h-4 text-green-500" />
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm font-medium mb-1">{title}</p>
-                  <p className="text-3xl font-bold text-gray-900 mb-1">{value}</p>
+                  <p className="text-gray-600 text-xs sm:text-sm font-medium mb-1">{title}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{value}</p>
                   <p className="text-xs text-gray-500">{subtitle}</p>
                 </div>
               </CardContent>
@@ -422,42 +414,42 @@ export default function HomePage() {
           ))}
         </div>
 
-      {/* Enhanced Progress Section */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-8">
+      {/* Enhanced Progress Section - Mobile Responsive */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mb-6 sm:mb-8">
           {/* Weekly Progress with improved visuals */}
           <Card className="bg-white/70 backdrop-blur-xl border-0 shadow-xl">
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center text-xl">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-                    <Calendar className="w-5 h-5 text-white" />
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                <CardTitle className="flex items-center text-lg sm:text-xl">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-2 sm:mr-3">
+                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
                   Weekly Progress
                 </CardTitle>
-                <Badge className={`${(userProgress.weeklyProgress / userProgress.weeklyGoal) * 100 >= 100 ? "bg-green-500" : "bg-blue-500"} text-white`}>
+                <Badge className={`${(userProgress.weeklyProgress / userProgress.weeklyGoal) * 100 >= 100 ? "bg-green-500" : "bg-blue-500"} text-white text-center sm:text-left`}>
                   {Math.round((userProgress.weeklyProgress / userProgress.weeklyGoal) * 100)}%
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-lg font-semibold text-gray-800">XP Goal Progress</span>
-                  <div className="text-right">
-                    <span className="text-2xl font-bold text-blue-600">
+            <CardContent className="space-y-4 sm:space-y-6">
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-2 sm:space-y-0">
+                  <span className="text-base sm:text-lg font-semibold text-gray-800 text-center sm:text-left">XP Goal Progress</span>
+                  <div className="text-center sm:text-right">
+                    <span className="text-xl sm:text-2xl font-bold text-blue-600">
                       {(userProgress.weeklyProgress + realTimeStats.todayStats.xpGained).toLocaleString()}
                     </span>
-                    <span className="text-gray-600 text-lg">/{userProgress.weeklyGoal.toLocaleString()}</span>
+                    <span className="text-gray-600 text-base sm:text-lg">/{userProgress.weeklyGoal.toLocaleString()}</span>
                   </div>
                 </div>
                 <Progress 
                   value={Math.min(((userProgress.weeklyProgress + realTimeStats.todayStats.xpGained) / userProgress.weeklyGoal) * 100, 100)} 
-                  className="h-4 bg-gray-200"
+                  className="h-3 sm:h-4 bg-gray-200"
                 />
               </div>
               
-              {/* Enhanced daily progress circles */}
-              <div className="grid grid-cols-7 gap-3">
+              {/* Enhanced daily progress circles - Mobile Responsive */}
+              <div className="grid grid-cols-7 gap-1 sm:gap-3">
                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => {
                   const isToday = index === (new Date().getDay() === 0 ? 6 : new Date().getDay() - 1)
                   const dayTarget = Math.floor(userProgress.weeklyGoal / 7)
@@ -468,7 +460,7 @@ export default function HomePage() {
                   return (
                     <div key={day} className="text-center relative">
                       <div
-                        className={`w-14 h-14 rounded-full flex items-center justify-center text-sm font-bold relative overflow-hidden transition-all duration-300 border-2 ${
+                        className={`w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold relative overflow-hidden transition-all duration-300 border-2 ${
                           dayComplete
                             ? "border-green-500 bg-green-100 text-green-800"
                             : isToday
@@ -483,11 +475,14 @@ export default function HomePage() {
                           } opacity-30`}
                           style={{ transform: `scale(${dayProgressPercentage / 100})` }}
                         ></div>
-                        <span className="relative z-10">
-                          {isToday ? `${todayProgress} XP` : dayComplete ? "✓" : day.slice(0, 2)}
+                        <span className="relative z-10 text-center px-1">
+                          {isToday ? (
+                            <span className="hidden sm:inline">{todayProgress} XP</span>
+                          ) : dayComplete ? "✓" : day.slice(0, 2)}
+                          {isToday && <span className="sm:hidden">{day.slice(0, 1)}</span>}
                         </span>
                       </div>
-                      <div className="text-xs text-gray-600 mt-2 font-medium">{day}</div>
+                      <div className="text-xs text-gray-600 mt-1 sm:mt-2 font-medium">{day}</div>
                     </div>
                   )
                 })}
@@ -495,29 +490,29 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          {/* Enhanced Milestone Card */}
+          {/* Enhanced Milestone Card - Mobile Responsive */}
           <Card className="bg-white/70 backdrop-blur-xl border-0 shadow-xl">
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center text-xl">
-                  <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mr-3">
-                    <Trophy className="w-5 h-5 text-white" />
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                <CardTitle className="flex items-center text-lg sm:text-xl">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mr-2 sm:mr-3">
+                    <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
                   Next Milestone
                 </CardTitle>
-                <Badge variant="outline" className="text-lg px-4 py-2 border-yellow-300 text-yellow-700">
-                  <Sparkles className="w-4 h-4 mr-2" />
+                <Badge variant="outline" className="text-sm sm:text-lg px-3 sm:px-4 py-2 border-yellow-300 text-yellow-700">
+                  <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                   {Math.round(((userProgress.nextMilestone.progress + realTimeStats.currentSession.xpGained) / userProgress.nextMilestone.target) * 100)}%
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-6">
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">{userProgress.nextMilestone.title}</h3>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-lg text-gray-600">Progress</span>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-orange-600">
+            <CardContent className="space-y-4 sm:space-y-6">
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-4 sm:p-6">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center sm:text-left">{userProgress.nextMilestone.title}</h3>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-2 sm:space-y-0">
+                  <span className="text-base sm:text-lg text-gray-600 text-center sm:text-left">Progress</span>
+                  <div className="text-center sm:text-right">
+                    <div className="text-xl sm:text-2xl font-bold text-orange-600">
                       {(userProgress.nextMilestone.progress + realTimeStats.currentSession.xpGained).toLocaleString()}
                     </div>
                     <div className="text-gray-600">/{userProgress.nextMilestone.target.toLocaleString()} XP</div>
@@ -525,30 +520,30 @@ export default function HomePage() {
                 </div>
                 <Progress
                   value={((userProgress.nextMilestone.progress + realTimeStats.currentSession.xpGained) / userProgress.nextMilestone.target) * 100}
-                  className="h-4"
+                  className="h-3 sm:h-4"
                 />
-                <div className="flex justify-between items-center mt-4">
-                  <p className="text-sm text-gray-600">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4 space-y-2 sm:space-y-0">
+                  <p className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
                     {userProgress.nextMilestone.target - userProgress.nextMilestone.progress - realTimeStats.currentSession.xpGained} XP remaining
                   </p>
-                  <Badge className="bg-green-100 text-green-700">
+                  <Badge className="bg-green-100 text-green-700 mx-auto sm:mx-0">
                     Almost there! 🎉
                   </Badge>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="bg-blue-50 rounded-xl p-4">
-                  <div className="text-3xl font-bold text-blue-600">{userProgress.achievements.length}</div>
-                  <div className="text-sm text-gray-600">Achievements</div>
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
+                <div className="bg-blue-50 rounded-xl p-3 sm:p-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-blue-600">{userProgress.achievements.length}</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Achievements</div>
                 </div>
-                <div className="bg-green-50 rounded-xl p-4">
-                  <div className="text-3xl font-bold text-green-600">{userProgress.lessonsCompleted}</div>
-                  <div className="text-sm text-gray-600">Lessons</div>
+                <div className="bg-green-50 rounded-xl p-3 sm:p-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-green-600">{userProgress.lessonsCompleted}</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Lessons</div>
                 </div>
-                <div className="bg-purple-50 rounded-xl p-4">
-                  <div className="text-3xl font-bold text-purple-600">{Math.round(userProgress.accuracy)}%</div>
-                  <div className="text-sm text-gray-600">Accuracy</div>
+                <div className="bg-purple-50 rounded-xl p-3 sm:p-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-purple-600">{Math.round(userProgress.accuracy)}%</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Accuracy</div>
                 </div>
               </div>
             </CardContent>
@@ -556,7 +551,8 @@ export default function HomePage() {
         </div>
 
 
-       <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+       {/* Feature Cards - Mobile Responsive */}
+       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {[
             {
               title: "Interactive Learning",
@@ -648,19 +644,19 @@ export default function HomePage() {
               {/* Hover gradient overlay */}
               <div className={`absolute inset-0 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
               
-              <CardContent className="p-6 relative z-10">
-                <div className="flex items-start justify-between mb-6">
-                  <div className={`w-14 h-14 bg-gradient-to-r ${gradient} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                    <Icon className="w-7 h-7 text-white" />
+              <CardContent className="p-4 sm:p-6 relative z-10">
+                <div className="flex items-start justify-between mb-4 sm:mb-6">
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r ${gradient} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                    <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                   </div>
-                  <Badge variant="secondary" className="text-xs py-1 px-3 bg-gray-100 text-gray-700 group-hover:bg-white transition-colors">
+                  <Badge variant="secondary" className="text-xs py-1 px-2 sm:px-3 bg-gray-100 text-gray-700 group-hover:bg-white transition-colors">
                     {badge}
                   </Badge>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <h3 className="text-xl font-bold mb-3 group-hover:text-purple-600 transition-colors">{title}</h3>
+                    <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 group-hover:text-purple-600 transition-colors">{title}</h3>
                     <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 transition-colors">{description}</p>
                   </div>
                   
@@ -685,20 +681,20 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Recent Activity Feed */}
+        {/* Recent Activity Feed - Mobile Responsive */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <Clock className="w-5 h-5 mr-2 text-blue-600" />
+            <CardTitle className="flex items-center text-lg sm:text-xl">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-600" />
               Recent Activity
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {userProgress.recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+                <div key={index} className="flex items-center space-x-3 sm:space-x-4 p-3 bg-gray-50 rounded-lg">
                   <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
                       activity.type === "lesson"
                         ? "bg-blue-100 text-blue-600"
                         : activity.type === "game"
@@ -708,16 +704,16 @@ export default function HomePage() {
                             : "bg-green-100 text-green-600"
                     }`}
                   >
-                    {activity.type === "lesson" && <BookOpen className="w-5 h-5" />}
-                    {activity.type === "game" && <Gamepad2 className="w-5 h-5" />}
-                    {activity.type === "achievement" && <Trophy className="w-5 h-5" />}
-                    {activity.type === "practice" && <Target className="w-5 h-5" />}
+                    {activity.type === "lesson" && <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />}
+                    {activity.type === "game" && <Gamepad2 className="w-4 h-4 sm:w-5 sm:h-5" />}
+                    {activity.type === "achievement" && <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />}
+                    {activity.type === "practice" && <Target className="w-4 h-4 sm:w-5 sm:h-5" />}
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{activity.description}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{activity.description}</p>
                     <p className="text-xs text-gray-500">{activity.timestamp.toLocaleTimeString()}</p>
                   </div>
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" className="text-xs shrink-0">
                     +{activity.xpGained} XP
                   </Badge>
                 </div>
