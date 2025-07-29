@@ -274,7 +274,7 @@ export function ProgressTracker({ userProgress, realTimeStats }: ProgressTracker
               {userProgress.recentActivity.length === 0 && (
                 <div className="text-center py-2">
                   <p className="text-xs text-gray-500">No activity yet</p>
-                  <p className="text-xs text-gray-400">Start learning to see your progress!</p>
+                  <p className="text-xs text-muted-foreground">Start learning to see your progress!</p>
                 </div>
               )}
             </div>
@@ -289,7 +289,7 @@ export function ProgressTracker({ userProgress, realTimeStats }: ProgressTracker
             <div className="grid grid-cols-3 gap-1.5 text-center">
               <div className="bg-indigo-50 rounded-lg p-1.5">
                 <div className="text-base font-bold text-indigo-600">{realTimeStats.todayStats.timeSpent}m</div>
-                <div className="text-xs text-gray-600">Time</div>
+                <div className="text-xs text-foreground">Time</div>
               </div>
               <div className="bg-green-50 rounded-lg p-1.5">
                 <div className="text-base font-bold text-green-600">+{realTimeStats.todayStats.xpGained}</div>

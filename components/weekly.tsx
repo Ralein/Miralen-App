@@ -171,7 +171,7 @@ export function RealTimeProgressSection({
                             ? "bg-blue-500 text-white" 
                             : progressPercent > 0 
                               ? "bg-yellow-100 text-yellow-700 border-2 border-yellow-300"
-                              : "bg-gray-200 text-gray-500"
+                              : "bg-muted text-gray-500"
                       }`}
                     >
                       {/* Progress fill for current day */}
