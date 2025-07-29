@@ -189,49 +189,50 @@ const SIGN_CATEGORIES = [
       {
         letter: "0",
         description: "Closed fist or O shape",
-        image: "/placeholder.svg?height=200&width=200&text=0",
+        video: "https://youtu.be/Wudu2YanzjY",
         difficulty: "Easy",
       },
       {
         letter: "1",
+        video: "https://youtu.be/f6nL26ED4Do",
         description: "Index finger up",
-        image: "/placeholder.svg?height=200&width=200&text=1",
         difficulty: "Easy",
       },
       {
         letter: "2",
         description: "Index and middle up",
-        image: "/placeholder.svg?height=200&width=200&text=2",
+        video: "https://youtu.be/HRrWZjEBKiM",
         difficulty: "Easy",
       },
       {
         letter: "3",
         description: "Thumb, index, middle up",
-        image: "/placeholder.svg?height=200&width=200&text=3",
+        video:"https://youtu.be/0vE9AcsWYwc",
         difficulty: "Easy",
       },
       {
         letter: "4",
         description: "Four fingers up, thumb down",
-        image: "/placeholder.svg?height=200&width=200&text=4",
+        video:"https://youtu.be/5PwGpTCHq1s",
         difficulty: "Easy",
       },
       {
         letter: "5",
         description: "All five fingers spread",
-        image: "/placeholder.svg?height=200&width=200&text=5",
+        video:"https://youtu.be/M6D9KgdomzQ",
         difficulty: "Easy",
       },
       {
         letter: "6",
         description: "Thumb and pinky touch",
-        image: "/placeholder.svg?height=200&width=200&text=6",
+        video:"https://youtu.be/M6D9KgdomzQ",
+
         difficulty: "Medium",
       },
       {
         letter: "7",
         description: "Thumb and ring finger touch",
-        image: "/placeholder.svg?height=200&width=200&text=7",
+        video: "https://youtu.be/W1dxQ2ZrgYA",
         difficulty: "Medium",
       },
       {
@@ -263,13 +264,13 @@ const SIGN_CATEGORIES = [
       {
         letter: "GOODBYE",
         description: "Hand waves back and forth",
-        image: "/placeholder.svg?height=200&width=200&text=BYE",
+        video: "https://youtu.be/1331331331",
         difficulty: "Easy",
       },
       {
         letter: "PLEASE",
         description: "Flat hand circles on chest",
-        image: "/placeholder.svg?height=200&width=200&text=PLEASE",
+        video: "https://youtu.be/1331331331",
         difficulty: "Medium",
       },
       {
@@ -603,6 +604,7 @@ export function SignLanguageViewer({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedSign, setSelectedSign] = useState<any>(null)
+  const [currentSignIndex, setCurrentSignIndex] = useState(0)
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [practiceMode, setPracticeMode] = useState(false)
@@ -640,6 +642,7 @@ export function SignLanguageViewer({
   const playSignAnimation = (sign: any, autoplay = false) => {
     const isSameSign = selectedSign && selectedSign.letter === sign.letter
     setSelectedSign(sign)
+    setCurrentSignIndex(filteredSigns.findIndex(s => s.letter === sign.letter))
     setIsPlaying(true)
 
     if (sign.video) {
@@ -726,6 +729,20 @@ export function SignLanguageViewer({
       })
 
       setPracticeMode(false)
+    }
+  }
+
+  const handleNextSign = () => {
+    const nextIndex = currentSignIndex + 1
+    if (nextIndex < filteredSigns.length) {
+      playSignAnimation(filteredSigns[nextIndex])
+    }
+  }
+
+  const handlePreviousSign = () => {
+    const prevIndex = currentSignIndex - 1
+    if (prevIndex >= 0) {
+      playSignAnimation(filteredSigns[prevIndex])
     }
   }
 
@@ -1056,16 +1073,51 @@ export function SignLanguageViewer({
                         className="w-full max-w-sm mx-auto rounded-lg bg-gray-100 mb-4"
                       />
                     )}
-                    <div className="flex justify-center space-x-4 mt-4">
-                      <Button onClick={() => playSignAnimation(selectedSign, true)} disabled={isPlaying}>
-                        {isPlaying ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
-                        {isPlaying ? "Playing..." : selectedSign.video ? "Play Video" : "Play Animation"}
-                      </Button>
-                      <Button variant="outline" onClick={() => playSignAnimation(selectedSign, true)}>
-                        <RotateCcw className="w-4 h-4 mr-2" />
-                        Replay
-                      </Button>
-                    </div>
+                    <div className="flex flex-wrap justify-center items-center gap-4 mt-6">
+ 
+  <Button
+    onClick={() => playSignAnimation(selectedSign, true)}
+    disabled={isPlaying}
+    className="min-w-[140px] flex items-center"
+  >
+    {isPlaying ? (
+      <>
+        <Pause className="w-4 h-4 mc-2" />
+        Playing...
+      </>
+    ) : (
+      <>
+        <Play className="w-4 h-4 mc-2" />
+        {selectedSign.video ? "Play Video" : "Play Animation"}
+      </>
+    )}
+  </Button>
+
+  <Button
+    variant="outline"
+    onClick={() => playSignAnimation(selectedSign, true)}
+    className="min-w-[140px] flex items-center"
+  >
+    <RotateCcw className="w-4 h-4 mc-2" />
+    Replay
+  </Button>
+
+  <Button
+    onClick={handlePreviousSign}
+    disabled={currentSignIndex === 0}
+    className="min-w-[140px]"
+  >
+    Previous
+  </Button>
+
+  <Button
+    onClick={handleNextSign}
+    disabled={currentSignIndex === filteredSigns.length - 1}
+    className="min-w-[140px]"
+  >
+    Next
+  </Button>
+</div>
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold mb-4">How to Sign</h3>
@@ -1115,6 +1167,7 @@ export function SignLanguageViewer({
                   </div>
                 </div>
               </CardContent>
+
             </Card>
           </div>
         )}
