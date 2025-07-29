@@ -118,6 +118,20 @@ export default function HomePage() {
 
   const [userProgress, setUserProgress] = useState<UserProgress>(getInitialProgress())
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedSettings = localStorage.getItem("viola-accessibility-settings");
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        if (settings.darkMode) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+    }
+  }, []);
+
   const [realTimeStats, setRealTimeStats] = useState({
     currentSession: {
       timeSpent: 0,
@@ -303,18 +317,18 @@ export default function HomePage() {
       
 
   const renderDashboard = () => (
-    <div className="min-h-screen bg-gray-50 p-2 sm:p-4">
+    <div className="min-h-screen bg-background text-foreground p-2 sm:p-4">
       <div className="max-w-7xl mx-auto">
         {/* Enhanced Header - Mobile Responsive */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
           <div className="text-center sm:text-left">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 flex items-center justify-center sm:justify-start">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground flex items-center justify-center sm:justify-start">
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg mr-2 sm:mr-3 flex items-center justify-center">
                 <MessageSquare className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
               Viola Dashboard
             </h1>
-            <p className="text-gray-600 mt-2 text-sm sm:text-base lg:text-lg px-2 sm:px-0">{getModeDescription(accessibilityMode)}</p>
+            <p className="text-muted-foreground mt-2 text-sm sm:text-base lg:text-lg px-2 sm:px-0">{getModeDescription(accessibilityMode)}</p>
             <div className="flex flex-wrap items-center justify-center sm:justify-start mt-2 gap-2 sm:space-x-4 sm:gap-0">
               <Badge variant="secondary" className="text-xs sm:text-sm">
                 <Clock className="w-3 h-3 mr-1" />
