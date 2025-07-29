@@ -7,8 +7,6 @@ import { Switch } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Volume2, Vibrate, Eye, Settings, Zap, RotateCcw, AlertTriangle, Palette, Sun, Moon, Contrast } from "lucide-react"
-
-// Import the UserProgress type from lib instead of defining it locally
 import { UserProgress } from "@/lib/types"
 
 interface AccessibilitySettingsProps {
@@ -19,67 +17,63 @@ interface AccessibilitySettingsProps {
   onProgressReset: () => void
 }
 
-export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack, userProgress, onProgressReset }: AccessibilitySettingsProps) {
-  const [settings, setSettings] = useState({
-    // Audio Settings
-    audioEnabled: true,
-    audioVolume: 70,
-    morseSpeed: 15, // WPM
-    toneFrequency: 600, // Hz
+const SETTINGS_STORAGE_KEY = "viola-accessibility-settings";
 
-    // Visual Settings
-    highContrast: false,
-    darkMode: false,
-    fontSize: 16,
-    animationSpeed: 1,
-    colorBlindFriendly: false,
+const defaultSettings = {
+  audioEnabled: true,
+  audioVolume: 70,
+  morseSpeed: 15,
+  toneFrequency: 600,
+  highContrast: false,
+  darkMode: false,
+  fontSize: 16,
+  animationSpeed: 1,
+  colorBlindFriendly: false,
+  vibrationEnabled: true,
+  vibrationIntensity: 80,
+  buttonSize: "medium",
+  gestureControls: false,
+  voiceCommands: false,
+  showHints: true,
+  autoAdvance: false,
+  practiceReminders: true,
+};
 
-    // Haptic Settings
-    vibrationEnabled: true,
-    vibrationIntensity: 80,
-
-    // Interface Settings
-    buttonSize: "medium",
-    gestureControls: false,
-    voiceCommands: false,
-
-    // Learning Settings
-    showHints: true,
-    autoAdvance: false,
-    practiceReminders: true,
-  })
+export function AccessibilitySettings({ onBack, userProgress, onProgressReset }: AccessibilitySettingsProps) {
+  const [settings, setSettings] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+      if (savedSettings) {
+        return { ...defaultSettings, ...JSON.parse(savedSettings) };
+      }
+    }
+    return defaultSettings;
+  });
 
   const [showResetConfirm, setShowResetConfirm] = useState(false)
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      applyVisualSettings(settings);
+    }
+  }, [settings]);
 
-
-  }, [])
-
-  const updateSetting = (key: string, value: any) => {
+  const updateSetting = (key: keyof typeof settings, value: any) => {
     const newSettings = { ...settings, [key]: value }
     setSettings(newSettings)
-    
-    // Apply visual changes immediately
-    if (key === 'darkMode' || key === 'highContrast' || key === 'colorBlindFriendly' || key === 'fontSize') {
-      applyVisualSettings(newSettings)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(newSettings));
     }
   }
 
   const applyVisualSettings = (currentSettings: typeof settings) => {
+    if (typeof window === 'undefined') return;
     const root = document.documentElement
     
-    // Apply dark mode using Tailwind's dark class
-    if (currentSettings.darkMode) {
-      root.classList.add('dark')
-    } else {
-      root.classList.remove('dark')
-    }
-    
-    // Apply high contrast using CSS custom properties
+    root.classList.toggle('dark', currentSettings.darkMode);
+
     if (currentSettings.highContrast) {
       root.style.setProperty('--high-contrast', '1')
-      // Enhanced contrast colors
       if (currentSettings.darkMode) {
         root.style.setProperty('--background', '0 0% 0%')
         root.style.setProperty('--foreground', '0 0% 100%')
@@ -95,58 +89,31 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
       }
     } else {
       root.style.removeProperty('--high-contrast')
-      // Reset to default theme colors
       if (currentSettings.darkMode) {
-        root.style.setProperty('--background', '0 0% 3.9%')
-        root.style.setProperty('--foreground', '0 0% 98%')
-        root.style.setProperty('--card', '0 0% 3.9%')
-        root.style.setProperty('--card-foreground', '0 0% 98%')
-        root.style.setProperty('--border', '0 0% 14.9%')
+        root.style.setProperty('--background', '222.2 84% 4.9%')
+        root.style.setProperty('--foreground', '210 40% 98%')
+        root.style.setProperty('--card', '222.2 84% 4.9%')
+        root.style.setProperty('--card-foreground', '210 40% 98%')
+        root.style.setProperty('--border', '217.2 32.6% 17.5%')
       } else {
         root.style.setProperty('--background', '0 0% 100%')
-        root.style.setProperty('--foreground', '0 0% 3.9%')
+        root.style.setProperty('--foreground', '222.2 84% 4.9%')
         root.style.setProperty('--card', '0 0% 100%')
-        root.style.setProperty('--card-foreground', '0 0% 3.9%')
-        root.style.setProperty('--border', '0 0% 89.8%')
+        root.style.setProperty('--card-foreground', '222.2 84% 4.9%')
+        root.style.setProperty('--border', '214.3 31.8% 91.4%')
       }
     }
     
-    // Apply color blind friendly mode
-    if (currentSettings.colorBlindFriendly) {
-      root.style.setProperty('--color-blind-friendly', '1')
-    } else {
-      root.style.removeProperty('--color-blind-friendly')
-    }
-    
-    // Apply font size as CSS custom property
-    root.style.setProperty('--font-size-base', `${currentSettings.fontSize}px`)
-    
-    // Apply animation speed
-    root.style.setProperty('--animation-speed', `${currentSettings.animationSpeed}`)
+    root.style.setProperty('--color-blind-friendly', currentSettings.colorBlindFriendly ? '1' : '');
+    root.style.setProperty('--font-size-base', `${currentSettings.fontSize}px`);
+    root.style.setProperty('--animation-speed', `${currentSettings.animationSpeed}`);
   }
 
   const resetToDefaults = () => {
-    const defaultSettings = {
-      audioEnabled: true,
-      audioVolume: 70,
-      morseSpeed: 15,
-      toneFrequency: 600,
-      highContrast: false,
-      darkMode: false,
-      fontSize: 16,
-      animationSpeed: 1,
-      colorBlindFriendly: false,
-      vibrationEnabled: true,
-      vibrationIntensity: 80,
-      buttonSize: "medium",
-      gestureControls: false,
-      voiceCommands: false,
-      showHints: true,
-      autoAdvance: false,
-      practiceReminders: true,
-    }
     setSettings(defaultSettings)
-    applyVisualSettings(defaultSettings)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(defaultSettings));
+    }
   }
 
   const resetProgress = () => {
@@ -181,7 +148,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
     }
   }
 
-  // Get theme classes based on current settings using Tailwind utilities
   const getThemeClasses = () => {
     return "min-h-screen bg-background text-foreground p-4 transition-all duration-300"
   }
@@ -196,20 +162,14 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
 
   const getButtonSizeClasses = (size: string) => {
     switch (size) {
-      case "small":
-        return "h-8 px-3 text-sm"
-      case "medium":
-        return "h-10 px-4 text-base"
-      case "large":
-        return "h-12 px-6 text-lg"
-      case "extra-large":
-        return "h-16 px-8 text-xl"
-      default:
-        return "h-10 px-4 text-base"
+      case "small": return "h-8 px-3 text-sm"
+      case "medium": return "h-10 px-4 text-base"
+      case "large": return "h-12 px-6 text-lg"
+      case "extra-large": return "h-16 px-8 text-xl"
+      default: return "h-10 px-4 text-base"
     }
   }
 
-  // Apply color blind friendly colors using CSS custom properties
   const getColorBlindFriendlyColors = () => {
     if (settings.colorBlindFriendly) {
       return {
@@ -236,7 +196,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
   return (
     <div className={getThemeClasses()} style={{ fontSize: `var(--font-size-base, ${settings.fontSize}px)` }}>
       <div className="max-w-4xl mx-auto">
-        {/* Enhanced Header */}
         <div className="flex items-center mb-10">
           <Button 
             variant="ghost" 
@@ -257,7 +216,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Audio Settings */}
           <Card className={`${getCardClasses()} hover:border-blue-300/50`}>
             <CardHeader>
               <div className="flex items-center">
@@ -347,7 +305,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
             </CardContent>
           </Card>
 
-          {/* Enhanced Visual Settings */}
           <Card className={`${getCardClasses()} hover:border-green-300/50`}>
             <CardHeader>
               <div className="flex items-center">
@@ -363,7 +320,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Theme Mode Selection */}
               <div className="space-y-4">
                 <label className="text-sm font-bold block">Theme Mode</label>
                 <div className="grid grid-cols-1 gap-3">
@@ -397,7 +353,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
                 </div>
               </div>
 
-              {/* Accessibility Options */}
               {[
                 { 
                   key: 'highContrast', 
@@ -435,7 +390,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
                 </div>
               ))}
 
-              {/* Font Size Slider */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-bold">Font Size</label>
@@ -455,7 +409,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
                 </div>
               </div>
 
-              {/* Animation Speed */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-bold">Animation Speed</label>
@@ -474,7 +427,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
             </CardContent>
           </Card>
 
-          {/* Haptic Settings */}
           <Card className={`${getCardClasses()} hover:border-purple-300/50`}>
             <CardHeader>
               <div className="flex items-center">
@@ -527,7 +479,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
             </CardContent>
           </Card>
 
-          {/* Interface Settings */}
           <Card className={`${getCardClasses()} hover:border-orange-300/50`}>
             <CardHeader>
               <div className="flex items-center">
@@ -575,7 +526,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
           </Card>
         </div>
 
-        {/* Learning Settings */}
         <Card className={`mt-6 ${getCardClasses()} hover:border-yellow-300/50`}>
           <CardHeader>
             <div className="flex items-center">
@@ -610,7 +560,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
           </CardContent>
         </Card>
 
-        {/* Reset Buttons */}
         <Card className={`mt-6 ${getCardClasses()}`}>
           <CardContent className="p-6">
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -633,7 +582,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
               </Button>
             </div>
             
-            {/* Progress Reset Confirmation */}
             {showResetConfirm && (
               <div className={`mt-6 p-4 rounded-lg border-2 ${
                 settings.darkMode
@@ -693,7 +641,6 @@ export function AccessibilitySettings({ accessibilityMode, onModeChange, onBack,
           </CardContent>
         </Card>
 
-        {/* Visual Accessibility Guide */}
         <Card className={`mt-6 ${getCardClasses()}`}>
           <CardHeader>
             <CardTitle className="flex items-center text-lg">
