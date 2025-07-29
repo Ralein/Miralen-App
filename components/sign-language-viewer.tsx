@@ -760,7 +760,7 @@ export function SignLanguageViewer({
       </div>
 
       {/* Sign Language Hub Introduction */}
-      <Card className="bg-gradient-to-r from-blue-50 to-purple-50">
+      <Card className="text-gray-700 bg-gradient-to-r from-blue-50 to-purple-50">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Hand className="w-6 h-6 text-blue-600" />
@@ -768,13 +768,13 @@ export function SignLanguageViewer({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="text-gray-700 grid md:grid-cols-2 gap-6">
             <div>
-              <h3 className="font-semibold text-foreground mb-3 flex items-center">
+              <h3 className="font-semibold text-gray-700 mb-3 flex items-center">
                 <Eye className="w-5 h-5 mr-2 text-green-600" />
                 Visual Communication Mastery
               </h3>
-              <p className="text-sm text-foreground mb-4">
+              <p className="text-sm text-gray-700 mb-4">
                 Our comprehensive sign language hub offers over 500 carefully curated signs across six essential
                 categories. Each sign includes detailed hand position descriptions, difficulty ratings, and interactive
                 learning features designed to accelerate your visual communication skills.
@@ -799,7 +799,7 @@ export function SignLanguageViewer({
                 <Heart className="w-5 h-5 mr-2 text-red-600" />
                 Accessibility-First Design
               </h3>
-              <p className="text-sm text-foreground mb-4">
+              <p className="text-sm text-gray-700 mb-4">
                 Built specifically for users with hearing impairments and those learning to communicate with the deaf
                 community. Our platform bridges communication gaps through intuitive visual learning, making sign
                 language accessible to everyone regardless of their starting skill level.
