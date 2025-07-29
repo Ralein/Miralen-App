@@ -271,7 +271,7 @@ const DICTIONARY_CATEGORIES = [
     id: "basic",
     name: "Basic Words",
     description: "Essential everyday vocabulary",
-    color: "bg-gray-100 text-gray-800",
+    color: "bg-muted text-gray-800",
     words: [
       { word: "HELLO", morse: ".... . .-.. .-.. ---", definition: "Greeting", category: "basic" },
       { word: "GOODBYE", morse: "--. --- --- -.. -... -.-- .", definition: "Farewell", category: "basic" },
@@ -537,7 +537,7 @@ export function DictionaryExplorer({ accessibilityMode, onBack }: DictionaryExpl
                   </div>
                   <p className="text-gray-600 text-sm mb-2">{word.definition}</p>
                   <div className="flex items-center space-x-4">
-                    <div className="font-mono text-lg bg-gray-100 px-3 py-1 rounded">{word.morse}</div>
+                    <div className="font-mono text-lg bg-muted px-3 py-1 rounded">{word.morse}</div>
                     <div className="flex space-x-2">
                       {(accessibilityMode === "blind" || accessibilityMode === "hybrid") && (
                         <Button variant="outline" size="sm" onClick={() => playMorseAudio(word.morse)}>
@@ -577,7 +577,7 @@ export function DictionaryExplorer({ accessibilityMode, onBack }: DictionaryExpl
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center space-x-2">
+            <h1 className="text-3xl font-bold text-foreground flex items-center space-x-2">
               <BookOpen className="w-8 h-8 text-blue-600" />
               <span>Dictionary Explorer</span>
             </h1>

@@ -446,7 +446,7 @@ export function RealWorldScenarios({
               </div>
               <div className="text-right">
                 <div
-                  className={`text-3xl font-bold ${timeLeft <= 10 ? "text-red-600 animate-pulse" : "text-gray-900"}`}
+                  className={`text-3xl font-bold ${timeLeft <= 10 ? "text-red-600 animate-pulse" : "text-foreground"}`}
                 >
                   {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
                 </div>
@@ -476,7 +476,7 @@ export function RealWorldScenarios({
               <div className="space-y-4">
                 <p className="text-gray-700">{situation.challenge}</p>
 
-                <div className="p-4 bg-gray-100 rounded-lg">
+                <div className="p-4 bg-muted rounded-lg">
                   <h4 className="font-semibold mb-2">Message to transmit:</h4>
                   <p className="font-mono text-lg">{expectedMessage}</p>
                 </div>
@@ -536,7 +536,7 @@ export function RealWorldScenarios({
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              <div className="p-4 bg-gray-100 rounded-lg min-h-20 font-mono text-lg break-all">
+              <div className="p-4 bg-muted rounded-lg min-h-20 font-mono text-lg break-all">
                 {userInput || "Start transmitting..."}
               </div>
 
@@ -639,7 +639,7 @@ export function RealWorldScenarios({
             {selectedScenario ? "Back to Scenarios" : "Back"}
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+            <h1 className="text-3xl font-bold text-foreground flex items-center">
               <Shield className="w-8 h-8 mr-3 text-red-600" />
               Real-World Emergency Scenarios
             </h1>

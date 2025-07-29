@@ -104,8 +104,8 @@ export function AITutor({ accessibilityMode, onBack }: AITutorProps) {
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">AI Learning Tutor</h1>
-            <p className="text-gray-600 mt-2">Your personalized Morse code learning assistant</p>
+            <h1 className="text-3xl font-bold text-foreground">AI Learning Tutor</h1>
+            <p className="text-muted-foreground mt-2">Your personalized Morse code learning assistant</p>
           </div>
         </div>
 
@@ -126,7 +126,7 @@ export function AITutor({ accessibilityMode, onBack }: AITutorProps) {
                     <div key={index} className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}>
                       <div
                         className={`max-w-[80%] p-3 rounded-lg ${
-                          msg.type === "user" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-900"
+                          msg.type === "user" ? "bg-blue-600 text-white" : "bg-muted text-foreground"
                         }`}
                       >
                         <div className="flex items-start space-x-2">
@@ -140,7 +140,7 @@ export function AITutor({ accessibilityMode, onBack }: AITutorProps) {
 
                   {isTyping && (
                     <div className="flex justify-start">
-                      <div className="bg-gray-100 text-gray-900 p-3 rounded-lg">
+                      <div className="bg-muted text-foreground p-3 rounded-lg">
                         <div className="flex items-center space-x-2">
                           <Bot className="w-4 h-4 text-blue-600" />
                           <div className="flex space-x-1">

@@ -415,7 +415,7 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
             </CardHeader>
             <CardContent className="text-center">
               <div className="text-6xl font-bold text-blue-600 mb-4 break-words">{currentItem}</div>
-              <div className="text-3xl font-mono mb-6 p-4 bg-gray-100 rounded-lg break-words">{morseCode}</div>
+              <div className="text-3xl font-mono mb-6 p-4 bg-muted text-muted-foreground">{morseCode}</div>
 
               {/* Multimodal Feedback Buttons */}
               <div className="flex justify-center space-x-4 mb-4 flex-wrap gap-2">
@@ -443,7 +443,7 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
                         key={index}
                         className={`${
                           symbol === "." ? "w-4 h-4 rounded-full" : symbol === "-" ? "w-12 h-4 rounded-sm" : "w-2 h-2"
-                        } ${symbol === " " ? "bg-transparent" : "bg-blue-500 animate-pulse"}`}
+                        } ${symbol === " " ? "bg-transparent" : "bg-primary animate-pulse"}`}
                         style={{ animationDelay: `${index * 0.5}s` }}
                       />
                     ))}
@@ -463,7 +463,7 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
                 <p className="text-lg mb-4">
                   Enter the Morse code for: <strong>{currentItem}</strong>
                 </p>
-                <div className="text-2xl font-mono p-4 bg-gray-100 rounded-lg mb-4 min-h-16 flex items-center justify-center break-words">
+                <div className="text-2xl font-mono p-4 bg-muted rounded-lg mb-4 min-h-16 flex items-center justify-center break-words">
                   {userInput || "Tap dots, dashes, and spaces..."}
                 </div>
               </div>
@@ -548,7 +548,7 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
             Back
           </Button>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900 truncate">
+            <h1 className="text-3xl font-bold text-foreground truncate">
               {selectedLesson ? "Morse Code Practice" : "Learn Morse Code"}
             </h1>
             <p className="text-gray-600 mt-2">

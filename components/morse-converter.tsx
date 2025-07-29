@@ -200,8 +200,8 @@ export function MorseConverter({ accessibilityMode, onBack }: MorseConverterProp
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Morse Converter</h1>
-            <p className="text-gray-600 mt-2">Convert between text and Morse code</p>
+            <h1 className="text-3xl font-bold text-foreground">Morse Converter</h1>
+            <p className="text-muted-foreground mt-2">Convert between text and Morse code</p>
           </div>
         </div>
 
@@ -260,7 +260,7 @@ export function MorseConverter({ accessibilityMode, onBack }: MorseConverterProp
               <CardTitle>{mode === "text-to-morse" ? "Morse Code Output" : "Text Output"}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="min-h-32 p-4 bg-gray-100 rounded-lg text-lg font-mono">
+              <div className="min-h-32 p-4 bg-muted text-muted-foreground">
                 {outputText || "Output will appear here..."}
               </div>
               <div className="flex justify-between items-center mt-4">
@@ -309,7 +309,7 @@ export function MorseConverter({ accessibilityMode, onBack }: MorseConverterProp
               {Object.entries(MORSE_CODE_MAP)
                 .slice(0, 26)
                 .map(([letter, code]) => (
-                  <div key={letter} className="flex justify-between items-center p-2 bg-gray-100 rounded">
+                  <div key={letter} className="flex justify-between items-center p-2 bg-muted rounded">
                     <span className="font-bold">{letter}</span>
                     <span className="font-mono">{code}</span>
                   </div>

@@ -322,7 +322,7 @@ export function VoiceTraining({ accessibilityMode, onBack, userProgress, updateP
             </CardHeader>
             <CardContent className="text-center">
               <div className="text-6xl font-bold text-blue-600 mb-4">{currentExercise.word}</div>
-              <div className="text-2xl font-mono mb-4 p-4 bg-gray-100 rounded-lg">{currentExercise.morse}</div>
+              <div className="text-2xl font-mono mb-4 p-4 bg-muted rounded-lg">{currentExercise.morse}</div>
               <Button
                 variant="outline"
                 onClick={() => playExample(currentExercise.morse)}
@@ -373,7 +373,7 @@ export function VoiceTraining({ accessibilityMode, onBack, userProgress, updateP
               {/* Audio Level Visualizer */}
               <div className="text-center">
                 <div className="w-32 h-32 mx-auto mb-4 relative">
-                  <div className="w-full h-full rounded-full border-4 border-gray-200 flex items-center justify-center">
+                  <div className="w-full h-full rounded-full border-4 border-border flex items-center justify-center">
                     <div
                       className={`rounded-full transition-all duration-100 ${
                         isRecording ? "bg-red-500" : "bg-gray-400"
@@ -503,7 +503,7 @@ export function VoiceTraining({ accessibilityMode, onBack, userProgress, updateP
             {selectedExercise ? "Back to Exercises" : "Back"}
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+            <h1 className="text-3xl font-bold text-foreground flex items-center">
               <Mic className="w-8 h-8 mr-3 text-blue-600" />
               Voice Training
             </h1>
