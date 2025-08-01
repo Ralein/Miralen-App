@@ -468,17 +468,15 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
                   Read Aloud
                 </Button>
 
+                <Button variant="outline" onClick={() => playMorseVibration(morseCode)}>
+                  <Vibrate className="w-4 h-4 mr-2" />
+                  Vibration
+                </Button>
+
                 {(accessibilityMode === "blind" || accessibilityMode === "hybrid") && (
                   <Button variant="outline" onClick={() => playMorseAudio(morseCode)}>
                     <Volume2 className="w-4 h-4 mr-2" />
                     Play Morse Audio
-                  </Button>
-                )}
-
-                {(accessibilityMode === "blind" || accessibilityMode === "hybrid") && (
-                  <Button variant="outline" onClick={() => playMorseVibration(morseCode)}>
-                    <Vibrate className="w-4 h-4 mr-2" />
-                    Feel Pattern
                   </Button>
                 )}
               </div>
