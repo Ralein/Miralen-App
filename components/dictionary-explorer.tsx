@@ -472,6 +472,12 @@ export function DictionaryExplorer({ accessibilityMode, onBack }: DictionaryExpl
     navigator.vibrate(pattern)
   }
 
+  const readAloud = (text: string) => {
+    if (!('speechSynthesis' in window)) return
+    const utterance = new SpeechSynthesisUtterance(text)
+    window.speechSynthesis.speak(utterance)
+  }
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
   }
@@ -539,6 +545,9 @@ export function DictionaryExplorer({ accessibilityMode, onBack }: DictionaryExpl
                   <div className="flex items-center space-x-4">
                     <div className="font-mono text-lg bg-muted px-3 py-1 rounded">{word.morse}</div>
                     <div className="flex space-x-2">
+                      <Button variant="outline" size="sm" onClick={() => readAloud(word.word)}>
+                        <Volume2 className="w-4 h-4" />
+                      </Button>
                       {(accessibilityMode === "blind" || accessibilityMode === "hybrid") && (
                         <Button variant="outline" size="sm" onClick={() => playMorseAudio(word.morse)}>
                           <Volume2 className="w-4 h-4" />

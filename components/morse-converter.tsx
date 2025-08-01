@@ -84,22 +84,66 @@ export function MorseConverter({ accessibilityMode, onBack }: MorseConverterProp
   }
 
   const playMorseAudio = async (morseCode: string) => {
-    if (!("AudioContext" in window)) return
+    if (!("AudioContext" in window) || !('speechSynthesis' in window)) return
 
     setIsPlaying(true)
     const audioContext = new AudioContext()
     const dotDuration = 100 // milliseconds
     const dashDuration = 300
     const pauseDuration = 100
+    const letterPauseDuration = 400
+    const wordPauseDuration = 700
 
-    for (let i = 0; i < morseCode.length; i++) {
-      const char = morseCode[i]
-      if (char === ".") {
-        await playTone(audioContext, 600, dotDuration)
-      } else if (char === "-") {
-        await playTone(audioContext, 600, dashDuration)
+    const morseTokens = morseCode.split(' ')
+    let currentWord = ''
+
+    for (const token of morseTokens) {
+      if (token === '/') {
+        if (currentWord) {
+          const wordUtterance = new SpeechSynthesisUtterance(currentWord)
+          window.speechSynthesis.speak(wordUtterance)
+          await new Promise((r) => setTimeout(r, wordPauseDuration))
+          currentWord = ''
+        }
+      } else {
+        const letter = REVERSE_MORSE_MAP[token]
+        if (letter) {
+          currentWord += letter
+          const utterance = new SpeechSynthesisUtterance(letter)
+          utterance.rate = 1.5
+          window.speechSynthesis.speak(utterance)
+          await new Promise((r) => setTimeout(r, 150))
+
+          for (const char of token) {
+            if (char === '.') {
+              await playTone(audioContext, 600, dotDuration)
+            } else if (char === '-') {
+              await playTone(audioContext, 600, dashDuration)
+            }
+            await new Promise((r) => setTimeout(r, pauseDuration))
+          }
+          await new Promise((r) => setTimeout(r, letterPauseDuration))
+        } else if (token) {
+          // Non-morse character
+          if (currentWord) {
+            // End of previous word
+            const wordUtterance = new SpeechSynthesisUtterance(currentWord)
+            window.speechSynthesis.speak(wordUtterance)
+            await new Promise((r) => setTimeout(r, wordPauseDuration))
+            currentWord = ''
+          }
+          const utterance = new SpeechSynthesisUtterance(token)
+          window.speechSynthesis.speak(utterance)
+          await new Promise((r) => setTimeout(r, 300))
+        }
       }
-      await new Promise((resolve) => setTimeout(resolve, pauseDuration))
+    }
+
+    if (currentWord) {
+      // Speak last word
+      const wordUtterance = new SpeechSynthesisUtterance(currentWord)
+      window.speechSynthesis.speak(wordUtterance)
+      await new Promise((r) => setTimeout(r, wordPauseDuration))
     }
 
     setIsPlaying(false)
