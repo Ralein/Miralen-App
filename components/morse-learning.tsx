@@ -427,10 +427,10 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
       <div className="max-w-4xl mx-auto">
         {/* Lesson Header */}
         <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">{lesson.title}</h2>
-              <div className="flex items-center space-x-4">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-xl font-bold">{lesson.title}</h2>
+              <div className="flex items-center space-x-2">
                 <Badge variant="outline">
                   Score: {score}/{attempts}
                 </Badge>
@@ -439,8 +439,8 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
                 </Badge>
               </div>
             </div>
-            <Progress value={lessonProgress} className="h-3" />
-            <p className="text-sm text-gray-600 mt-2">{Math.round(lessonProgress)}% Complete</p>
+            <Progress value={lessonProgress} className="h-2" />
+            <p className="text-xs text-gray-600 mt-1">{Math.round(lessonProgress)}% Complete</p>
           </CardContent>
         </Card>
 
@@ -589,8 +589,11 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-full mx-auto">
+      <div className="min-h-screen bg-background p-4">
+        <div className="max-w-6xl mx-auto">
+
+
+
         {/* Header */}
         <div className="flex items-center mb-8">
           <Button
@@ -613,6 +616,8 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
 
         {selectedLesson ? renderLesson() : renderLessonList()}
       </div>
-    </div>
+
+      </div>
+
   )
 }
