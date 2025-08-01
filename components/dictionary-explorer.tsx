@@ -548,14 +548,12 @@ export function DictionaryExplorer({ accessibilityMode, onBack }: DictionaryExpl
                       <Button variant="outline" size="sm" onClick={() => readAloud(word.word)}>
                         <Volume2 className="w-4 h-4" />
                       </Button>
+                      <Button variant="outline" size="sm" onClick={() => playMorseVibration(word.morse)}>
+                        <Vibrate className="w-4 h-4" />
+                      </Button>
                       {(accessibilityMode === "blind" || accessibilityMode === "hybrid") && (
                         <Button variant="outline" size="sm" onClick={() => playMorseAudio(word.morse)}>
                           <Volume2 className="w-4 h-4" />
-                        </Button>
-                      )}
-                      {(accessibilityMode === "blind" || accessibilityMode === "hybrid") && (
-                        <Button variant="outline" size="sm" onClick={() => playMorseVibration(word.morse)}>
-                          <Vibrate className="w-4 h-4" />
                         </Button>
                       )}
                       <Button variant="outline" size="sm" onClick={() => copyToClipboard(word.morse)}>
