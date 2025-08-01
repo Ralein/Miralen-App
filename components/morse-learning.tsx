@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Volume2, Vibrate, CheckCircle, XCircle, RotateCcw, Lightbulb } from "lucide-react"
+import { ArrowLeft, Volume2, Vibrate, CheckCircle, XCircle, RotateCcw, Lightbulb, Delete } from "lucide-react"
 
 interface MorseLearningProps {
   accessibilityMode: string | null
@@ -61,12 +61,12 @@ const LESSONS = [
     title: "Numbers 0-9",
     letters: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
     difficulty: "Intermediate",
-    words: ["ONE", "TWO", "TEN", "ZERO"],
+    words: ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"],
     sentences: [],
   },
   {
     id: 7,
-    title: "Simple Words",
+    title: "Three Letter Words",
     letters: [],
     difficulty: "Intermediate",
     words: ["CAT", "DOG", "SUN", "RUN", "FUN", "HAT", "BAT", "CAR", "EAR", "TEA"],
@@ -122,6 +122,8 @@ const MORSE_CODE_MAP: { [key: string]: string } = {
   " ": "/",
 }
 
+const REVERSE_MORSE_MAP = Object.fromEntries(Object.entries(MORSE_CODE_MAP).map(([key, value]) => [value, key]))
+
 export function MorseLearning({ accessibilityMode, onBack, userProgress, updateProgress }: MorseLearningProps) {
   const [selectedLesson, setSelectedLesson] = useState<number | null>(null)
   const [currentItem, setCurrentItem] = useState<string>("")
@@ -161,25 +163,53 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
   }
 
   const playMorseAudio = async (morseCode: string) => {
-    if (!("AudioContext" in window)) return
+    if (!("AudioContext" in window) || !('speechSynthesis' in window)) return
 
     const audioContext = new AudioContext()
     const dotDuration = 150
     const dashDuration = 450
     const pauseDuration = 150
+    const letterPauseDuration = 400
+    const wordPauseDuration = 700
 
-    for (let i = 0; i < morseCode.length; i++) {
-      const char = morseCode[i]
-      if (char === ".") {
-        await playTone(audioContext, 600, dotDuration)
-      } else if (char === "-") {
-        await playTone(audioContext, 600, dashDuration)
-      } else if (char === " ") {
-        await new Promise((resolve) => setTimeout(resolve, pauseDuration * 2))
+    const morseTokens = morseCode.split(' ')
+    let currentWord = ''
+
+    for (const token of morseTokens) {
+      if (token === '/') {
+        if (currentWord) {
+          const wordUtterance = new SpeechSynthesisUtterance(currentWord)
+          window.speechSynthesis.speak(wordUtterance)
+          await new Promise((r) => setTimeout(r, wordPauseDuration))
+          currentWord = ''
+        }
+      } else if (token) {
+        const letter = REVERSE_MORSE_MAP[token]
+        if (letter) {
+          currentWord += letter
+          const utterance = new SpeechSynthesisUtterance(letter)
+          utterance.rate = 1.5
+          window.speechSynthesis.speak(utterance)
+          await new Promise((r) => setTimeout(r, 150))
+
+          for (const char of token) {
+            if (char === '.') {
+              await playTone(audioContext, 600, dotDuration)
+            } else if (char === '-') {
+              await playTone(audioContext, 600, dashDuration)
+            }
+            await new Promise((r) => setTimeout(r, pauseDuration))
+          }
+          await new Promise((r) => setTimeout(r, letterPauseDuration))
+        }
       }
-      if (char !== " ") {
-        await new Promise((resolve) => setTimeout(resolve, pauseDuration))
-      }
+    }
+
+    if (currentWord) {
+      // Speak last word
+      const wordUtterance = new SpeechSynthesisUtterance(currentWord)
+      window.speechSynthesis.speak(wordUtterance)
+      await new Promise((r) => setTimeout(r, wordPauseDuration))
     }
   }
 
@@ -219,6 +249,12 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
     }
 
     navigator.vibrate(pattern)
+  }
+
+  const readAloud = (text: string) => {
+    if (!('speechSynthesis' in window)) return
+    const utterance = new SpeechSynthesisUtterance(text)
+    window.speechSynthesis.speak(utterance)
   }
 
   const checkAnswer = () => {
@@ -319,8 +355,16 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
     setUserInput((prev) => prev + " ")
   }
 
+  const addSlash = () => {
+    setUserInput((prev) => prev + "/")
+  }
+
   const clearInput = () => {
     setUserInput("")
+  }
+
+  const backspace = () => {
+    setUserInput((prev) => prev.slice(0, -1))
   }
 
   const renderLessonList = () => (
@@ -419,10 +463,15 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
 
               {/* Multimodal Feedback Buttons */}
               <div className="flex justify-center space-x-4 mb-4 flex-wrap gap-2">
+                <Button variant="outline" onClick={() => readAloud(currentItem)}>
+                  <Volume2 className="w-4 h-4 mr-2" />
+                  Read Aloud
+                </Button>
+
                 {(accessibilityMode === "blind" || accessibilityMode === "hybrid") && (
                   <Button variant="outline" onClick={() => playMorseAudio(morseCode)}>
                     <Volume2 className="w-4 h-4 mr-2" />
-                    Play Audio
+                    Play Morse Audio
                   </Button>
                 )}
 
@@ -469,7 +518,7 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
               </div>
 
               {/* Input Buttons */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-2 gap-4 mb-6">
                 <Button size="lg" variant="outline" onClick={addDot} className="h-20 text-2xl bg-transparent">
                   • DOT
                 </Button>
@@ -479,6 +528,9 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
                 <Button size="lg" variant="outline" onClick={addSpace} className="h-20 text-2xl bg-transparent">
                   ␣ SPACE
                 </Button>
+                <Button size="lg" variant="outline" onClick={addSlash} className="h-20 text-2xl bg-transparent">
+                  / SLASH
+                </Button>
               </div>
 
               {/* Action Buttons */}
@@ -486,6 +538,10 @@ export function MorseLearning({ accessibilityMode, onBack, userProgress, updateP
                 <Button variant="outline" onClick={clearInput}>
                   <RotateCcw className="w-4 h-4 mr-2" />
                   Clear
+                </Button>
+                <Button variant="outline" onClick={backspace}>
+                  <Delete className="w-4 h-4 mr-2" />
+                  Backspace
                 </Button>
                 <Button variant="outline" onClick={() => setShowHint(!showHint)}>
                   <Lightbulb className="w-4 h-4 mr-2" />
