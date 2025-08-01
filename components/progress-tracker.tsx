@@ -128,12 +128,12 @@ export function ProgressTracker({ userProgress, realTimeStats }: ProgressTracker
               </div>
             </div>
             <Button 
-              variant="default" 
+              variant="ghost" 
               size="sm" 
               onClick={() => setIsExpanded(!isExpanded)} 
-              className="h-7 w-7 p-0 hover:bg-gray-900 hover:text-white transition-colors duration-200"
+              className="h-7 w-7 p-0 text-black hover:text-white"
             >
-              {isExpanded ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
+              {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             </Button>
           </div>
 

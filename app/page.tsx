@@ -317,7 +317,7 @@ export default function HomePage() {
       
 
   const renderDashboard = () => (
-    <div className="min-h-screen bg-background text-foreground p-2 sm:p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-2 sm:p-4">
       <div className="max-w-7xl mx-auto">
         {/* Enhanced Header - Mobile Responsive */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
