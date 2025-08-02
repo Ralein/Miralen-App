@@ -36,6 +36,7 @@ import { SignLanguageViewer } from "@/components/sign-language-viewer"
 import { AccessibilitySettings } from "@/components/accessibility-settings"
 import { AITutor } from "@/components/ai-tutor"
 import { RealWorldScenarios } from "@/components/real-world-scenarios"
+import LipReading from "@/components/lip-reading"
 import { VoiceTraining } from "@/components/voice-training"
 import { DictionaryExplorer } from "@/components/dictionary-explorer"
 import { ProgressTracker } from "@/components/progress-tracker"
@@ -649,6 +650,8 @@ export default function HomePage() {
               progress: 100,
               gradient: "from-gray-500 to-slate-500",
             },
+
+            
           ].map(({ title, description, icon: Icon, view, color, badge, progress, gradient }) => (
            <Card
               key={view}
