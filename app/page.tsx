@@ -176,15 +176,22 @@ export default function HomePage() {
 
   const updateProgress = useCallback((progressUpdate: Partial<UserProgress>) => {
     setUserProgress((prev) => {
-      const updated = { ...prev, ...progressUpdate }
-      
+      const xpGained = (progressUpdate.xp || prev.xp) - prev.xp;
 
+      const updated: UserProgress = {
+        ...prev,
+        ...progressUpdate,
+      };
 
-
-      const xpGained = (progressUpdate.xp || 0) - prev.xp;
+      if (xpGained > 0) {
+        updated.weeklyProgress = (prev.weeklyProgress || 0) + xpGained;
+        if (updated.nextMilestone) {
+          updated.nextMilestone.progress = (prev.nextMilestone?.progress || 0) + xpGained;
+        }
+      }
 
       // Add to recent activity if XP was gained or other significant progress
-      if (xpGained > 0 || Object.keys(progressUpdate).some(key => key !== 'xp' && progressUpdate[key as keyof UserProgress] !== prev[key as keyof UserProgress])) {
+      if (xpGained > 0 || Object.keys(progressUpdate).some(key => key !== 'xp' && updated[key as keyof UserProgress] !== prev[key as keyof UserProgress])) {
         let activityType: string = "progress";
         let activityDescription: string = "Progress updated";
 
@@ -350,7 +357,7 @@ export default function HomePage() {
                 Level {userProgress.level}
               </Badge>
               <div className="text-xs sm:text-sm text-gray-600">
-                Next: {userProgress.nextMilestone.progress}/{userProgress.nextMilestone.target} XP
+                Next: {(userProgress.nextMilestone.progress)/2}/{userProgress.nextMilestone.target} XP
               </div>
             </div>
             <Button variant="outline" size="sm" onClick={() => setCurrentView("settings")} className="w-full sm:w-auto">
@@ -367,7 +374,7 @@ export default function HomePage() {
             {
               title: "Total XP",
               value: userProgress.xp.toLocaleString(),
-              subtitle: `+${Math.round(realTimeStats.todayStats.xpGained/2)} today`,
+              subtitle: `+${realTimeStats.todayStats.xpGained/2} today`,
               icon: Zap,
               gradient: "from-blue-500 to-cyan-500",
               bgGradient: "from-blue-50 to-cyan-50",
@@ -454,13 +461,13 @@ export default function HomePage() {
                   <span className="text-base sm:text-lg font-semibold text-gray-800 text-center sm:text-left">XP Goal Progress</span>
                   <div className="text-center sm:text-right">
                     <span className="text-xl sm:text-2xl font-bold text-blue-600">
-                      {(userProgress.weeklyProgress + realTimeStats.todayStats.xpGained).toLocaleString()}
+                      {userProgress.weeklyProgress.toLocaleString()}
                     </span>
                     <span className="text-gray-600 text-base sm:text-lg">/{userProgress.weeklyGoal.toLocaleString()}</span>
                   </div>
                 </div>
                 <Progress 
-                  value={Math.min(((userProgress.weeklyProgress + realTimeStats.todayStats.xpGained) / userProgress.weeklyGoal) * 100, 100)} 
+                  value={Math.min((userProgress.weeklyProgress / userProgress.weeklyGoal) * 100, 100)} 
                   className="h-3 sm:h-4 bg-gray-200"
                 />
               </div>
@@ -494,7 +501,7 @@ export default function HomePage() {
                         ></div>
                         <span className="relative z-10 text-center px-1">
                           {isToday ? (
-                            <span className="hidden sm:inline">{todayProgress} XP</span>
+                            <span className="hidden sm:inline">{todayProgress/2} XP</span>
                           ) : dayComplete ? "✓" : day.slice(0, 2)}
                           {isToday && <span className="sm:hidden">{day.slice(0, 1)}</span>}
                         </span>
@@ -519,7 +526,7 @@ export default function HomePage() {
                 </CardTitle>
                 <Badge variant="outline" className="text-sm sm:text-lg px-3 sm:px-4 py-2 border-yellow-300 text-yellow-700">
                   <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                  {Math.round(((userProgress.nextMilestone.progress + realTimeStats.currentSession.xpGained) / userProgress.nextMilestone.target) * 100)}%
+                  {Math.round((userProgress.nextMilestone.progress / userProgress.nextMilestone.target)/2 * 100)}%
                 </Badge>
               </div>
             </CardHeader>
@@ -530,13 +537,13 @@ export default function HomePage() {
                   <span className="text-base sm:text-lg text-gray-600 text-center sm:text-left">Progress</span>
                   <div className="text-center sm:text-right">
                     <div className="text-xl sm:text-2xl font-bold text-orange-600">
-                      {(userProgress.nextMilestone.progress + realTimeStats.currentSession.xpGained).toLocaleString()}
+                      {Number(userProgress.nextMilestone.progress.toLocaleString())/2}
                     </div>
                     <div className="text-gray-600">/{userProgress.nextMilestone.target.toLocaleString()} XP</div>
                   </div>
                 </div>
                 <Progress
-                  value={((userProgress.nextMilestone.progress + realTimeStats.currentSession.xpGained) / userProgress.nextMilestone.target) * 100}
+                  value={(userProgress.nextMilestone.progress / userProgress.nextMilestone.target)/2 * 100}
                   className="h-3 sm:h-4"
                 />
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4 space-y-2 sm:space-y-0">

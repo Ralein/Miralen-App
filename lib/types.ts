@@ -1,5 +1,6 @@
 
 export interface UserProgress {
+  xpGained: number
   level: number
   xp: number
   streak: number
