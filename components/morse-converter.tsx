@@ -67,15 +67,12 @@ declare global {
     SpeechRecognition: SpeechRecognitionStatic;
     webkitSpeechRecognition: SpeechRecognitionStatic;
   }
-}
-
-// Extend MediaTrackCapabilities and MediaTrackConstraintSet for torch support
-interface MediaTrackCapabilities {
-  torch?: boolean;
-}
-
-interface MediaTrackConstraintSet {
-  torch?: boolean;
+  interface MediaTrackCapabilities {
+    torch?: boolean;
+  }
+  interface MediaTrackConstraintSet {
+    torch?: boolean;
+  }
 }
 
 

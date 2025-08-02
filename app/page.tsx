@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress"
 import {
   Volume2,
   Eye,
+  Smile,
   Settings,
   BookOpen,
   MessageSquare,
@@ -29,6 +30,7 @@ import {
   ChevronRight,
   Sparkles,
   ArrowUp,
+  Speech,
 } from "lucide-react"
 import { MorseConverter } from "@/components/morse-converter"
 import { MorseLearning } from "@/components/morse-learning"
@@ -590,6 +592,16 @@ export default function HomePage() {
               progress: userProgress.skillLevels.signLanguage,
               gradient: "from-purple-500 to-violet-500",
             },
+             {
+              title: "Lip Reading",
+              description: "Practice understanding speech through visual cues.",
+              icon: Speech,
+              view: "lip-reading",
+              color: "orange",
+              badge: "New",
+              progress: 0,
+              gradient: "from-orange-500 to-amber-500",
+            },
             {
               title: "Real-World Practice",
               description: "Emergency scenarios and practical communication situations",
@@ -640,6 +652,7 @@ export default function HomePage() {
               progress: 100,
               gradient: "from-green-500 to-emerald-500",
             },
+           
             {
               title: "Settings & Preferences",
               description: "Customize your accessibility experience and learning preferences",
@@ -765,16 +778,18 @@ export default function HomePage() {
         return <VoiceTraining {...commonProps} />
       case "dictionary":
         return <DictionaryExplorer {...commonProps} />
+      case "lip-reading":
+        return <LipReading onBack={() => setCurrentView("dashboard")} />
       case "settings":
         return (
           <AccessibilitySettings
             accessibilityMode={accessibilityMode}
-            onModeChange={(mode) => handleModeSelect(mode as AccessibilityMode)}
             onBack={() => setCurrentView("dashboard")}
             userProgress={userProgress}
-            onProgressReset={handleProgressReset}
-          />
-        )
+            onProgressReset={handleProgressReset} onModeChange={function (mode: string | null): void {
+              throw new Error("Function not implemented.")
+            } }          />
+        );
       default:
         return renderDashboard()
     }
