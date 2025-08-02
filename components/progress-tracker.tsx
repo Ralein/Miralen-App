@@ -155,7 +155,7 @@ export function ProgressTracker({ userProgress, realTimeStats }: ProgressTracker
               <div className="text-xs text-gray-600">Session</div>
             </div>
             <div className="bg-green-50 rounded-lg p-1">
-              <div className="text-sm font-bold text-green-600">+{Math.round(realTimeStats.currentSession.xpGained/2)}</div>
+              <div className="text-sm font-bold text-green-600">+{realTimeStats.currentSession.xpGained / 2}</div>
               <div className="text-xs text-gray-600">XP</div>
             </div>
             <div className="bg-purple-50 rounded-lg p-1">
