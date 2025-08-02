@@ -120,7 +120,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedSettings = localStorage.getItem("viola-accessibility-settings");
+      const savedSettings = localStorage.getItem("Miralen-accessibility-settings");
       if (savedSettings) {
         const settings = JSON.parse(savedSettings);
         if (settings.darkMode) {
@@ -326,7 +326,7 @@ export default function HomePage() {
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg mr-2 sm:mr-3 flex items-center justify-center">
                 <MessageSquare className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
-              Viola Dashboard
+              Miralen Dashboard
             </h1>
             <p className="text-muted-foreground mt-2 text-sm sm:text-base lg:text-lg px-2 sm:px-0">{getModeDescription(accessibilityMode)}</p>
             <div className="flex flex-wrap items-center justify-center sm:justify-start mt-2 gap-2 sm:space-x-4 sm:gap-0">

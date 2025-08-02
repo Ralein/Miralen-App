@@ -17,7 +17,7 @@ interface AccessibilitySettingsProps {
   onProgressReset: () => void
 }
 
-const SETTINGS_STORAGE_KEY = "viola-accessibility-settings";
+const SETTINGS_STORAGE_KEY = "Miralen-accessibility-settings";
 
 const defaultSettings = {
   audioEnabled: true,
