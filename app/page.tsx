@@ -117,6 +117,7 @@ export default function HomePage() {
       ranking: 0,
       tournamentWins: 0,
     },
+    xpGained: 0
   })
 
   const [userProgress, setUserProgress] = useState<UserProgress>(getInitialProgress())
